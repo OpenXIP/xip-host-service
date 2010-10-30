@@ -6,14 +6,12 @@ package edu.wustl.xipHost.hostControl;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -31,27 +29,17 @@ import edu.wustl.xipHost.application.Application;
 import edu.wustl.xipHost.application.ApplicationManager;
 import edu.wustl.xipHost.application.ApplicationManagerFactory;
 import edu.wustl.xipHost.avt2ext.iterator.IterationTarget;
-import edu.wustl.xipHost.caGrid.GridManager;
-import edu.wustl.xipHost.caGrid.GridManagerFactory;
-import edu.wustl.xipHost.dicom.DicomManager;
-import edu.wustl.xipHost.dicom.DicomManagerFactory;
 import edu.wustl.xipHost.gui.ConfigPanel;
 import edu.wustl.xipHost.gui.ExceptionDialog;
 import edu.wustl.xipHost.gui.HostMainWindow;
-import edu.wustl.xipHost.gui.LoginDialog;
-import edu.wustl.xipHost.worklist.Worklist;
-import edu.wustl.xipHost.worklist.WorklistFactory;
 
 public class HostConfigurator {
-	final static Logger logger = Logger.getLogger(HostConfigurator.class);
-	Login login = new Login();		 
+	final static Logger logger = Logger.getLogger(HostConfigurator.class);	 
 	File hostTmpDir;
 	File hostOutDir;
 	File hostConfig;
 	HostMainWindow mainWindow;
 	ConfigPanel configPanel = new ConfigPanel(new JFrame()); 		//ConfigPanel is used to specify tmp and output dirs	
-	GridManager gridMgr;
-	DicomManager dicomMgr;		
 	ApplicationManager appMgr;
 	File xipApplicationsConfig;	
 	public static final String OS = System.getProperty("os.name");
@@ -59,13 +47,8 @@ public class HostConfigurator {
 	
 	public boolean runHostStartupSequence(){		
 		logger.info("Launching XIPHost. Platform " + OS);
-		LoginDialog loginDialog = new LoginDialog();
-		loginDialog.setLogin(login);
-		loginDialog.setModal(true);
-		loginDialog.setVisible(true);
-		userName = login.getUserName();		
 		hostConfig = new File("./config/xipConfig.xml");
-		if(loadHostConfigParameters(hostConfig) == false || loadPixelmedSavedImagesFolder(serverConfig) == false){		
+		if(loadHostConfigParameters(hostConfig) == false){		
 			new ExceptionDialog("Unable to load Host configuration parameters.", 
 					"Ensure host config file and Pixelmed/HSQLQB config file are valid.",
 					"Host Startup Dialog");
@@ -77,28 +60,6 @@ public class HostConfigurator {
 		}		
 		hostTmpDir = createSubTmpDir(getParentOfTmpDir());		
 		hostOutDir = createSubOutDir(getParentOfOutDir());
-		prop.setProperty("Application.SavedImagesFolderName", getPixelmedSavedImagesFolder());		
-		try {
-			prop.store(new FileOutputStream(serverConfig), "Updated Application.SavedImagesFolderName");			
-		} catch (FileNotFoundException e1) {
-			System.exit(0);
-		} catch (IOException e1) {
-			System.exit(0);
-		}
-				
-		//run GridManagerImpl startup
-		gridMgr = GridManagerFactory.getInstance();
-		gridMgr.runGridStartupSequence();				
-		//test for gridMgr == null				
-        gridMgr.setImportDirectory(hostTmpDir);		
-		
-    	//run WorkList startup
-		Worklist worklist = WorklistFactory.getInstance();        		
-		String path = "./config/worklist.xml";
-		File xmlWorklistFile = new File(path);					
-		worklist.loadWorklist(xmlWorklistFile);		
-		dicomMgr = DicomManagerFactory.getInstance();
-		dicomMgr.runDicomStartupSequence();		    	    	
 				
     	appMgr = ApplicationManagerFactory.getInstance();    	
     	xipApplicationsConfig = new File("./config/applications.xml");	
@@ -208,24 +169,6 @@ public class HostConfigurator {
     }
 	
 	File serverConfig = new File("./pixelmed-server-hsqldb/workstation1.properties");
-	Properties prop = new Properties();
-	String pixelmedSavedImagesFolder;
-	boolean loadPixelmedSavedImagesFolder(File serverConfig){
-		if(serverConfig == null){return false;}		
-		try {
-			prop.load(new FileInputStream(serverConfig));
-			pixelmedSavedImagesFolder = prop.getProperty("Application.SavedImagesFolderName");
-			if(new File(pixelmedSavedImagesFolder).exists() == false){
-				pixelmedSavedImagesFolder = "";
-				displayStartup = new Boolean(true);
-			}
-		} catch (FileNotFoundException e) {
-			return false;
-		} catch (IOException e) {
-			return false;
-		}
-		return true;
-	}
 	
 	public String getParentOfOutDir(){
 		return parentOfOutDir;
@@ -244,13 +187,6 @@ public class HostConfigurator {
 	
 	public void setParentOfTmpDir(String newDir){
 		parentOfTmpDir = newDir;
-	}
-	
-	public String getPixelmedSavedImagesFolder(){
-		return pixelmedSavedImagesFolder;
-	}
-	public void setPixelmedSavedImagesFolder(String pixelmedDir){
-		pixelmedSavedImagesFolder = pixelmedDir;
 	}
 	
 	public Boolean getDisplayStartUp(){
@@ -301,12 +237,10 @@ public class HostConfigurator {
 	void displayConfigDialog(){							
 		configPanel.setParentOfTmpDir(getParentOfTmpDir());
 		configPanel.setParentOfOutDir(getParentOfOutDir());
-		configPanel.setPixelmedSavedImagesDir(getPixelmedSavedImagesFolder());
 		configPanel.setDisplayStartup(getDisplayStartUp());
 		configPanel.display();    		
 		setParentOfTmpDir(configPanel.getParentOfTmpDir());
 		setParentOfOutDir(configPanel.getParentOfOutDir());
-		setPixelmedSavedImagesFolder(configPanel.getPixelmedSavedImagesDir());
 		setDisplayStartUp(configPanel.getDisplayStartup());				
 	}	
 	
@@ -394,12 +328,6 @@ public class HostConfigurator {
 		storeHostConfigParameters(hostConfig);
 		//Store Applications		
 		appMgr.storeApplications(applications, xipApplicationsConfig);
-		//Perform Grid shutdown that includes store grid locations
-		if(gridMgr.runGridShutDownSequence() == false){
-			new ExceptionDialog("Error when storing grid locations.", 
-					"System will save any modifications made to grid locations.",
-					"Host Shutdown Dialog");
-		}
 		
 		//Clear content of TmpDir but do not delete TmpDir itself
 		File dir = new File(getParentOfTmpDir());				

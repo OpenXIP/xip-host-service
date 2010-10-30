@@ -7,15 +7,10 @@ import javax.swing.*;
 import edu.wustl.xipHost.application.Application;
 import edu.wustl.xipHost.application.ApplicationManagerFactory;
 import edu.wustl.xipHost.avt2ext.AVTPanel;
-import edu.wustl.xipHost.caGrid.GridPanel;
-import edu.wustl.xipHost.dicom.DicomPanel;
-import edu.wustl.xipHost.globalSearch.GlobalSearchPanel;
 import edu.wustl.xipHost.hostControl.HostConfigurator;
 import edu.wustl.xipHost.localFileSystem.FileManager;
 import edu.wustl.xipHost.localFileSystem.FileManagerFactory;
 import edu.wustl.xipHost.localFileSystem.HostFileChooser;
-import edu.wustl.xipHost.worklist.WorklistPanel;
-import edu.wustl.xipHost.xds.XDSPanel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,31 +29,20 @@ public class HostMainWindow extends JFrame implements ActionListener {
     //CenterTabMouseAdapter mouseAdapterCenterTabs = new CenterTabMouseAdapter();
     static JPanel hostPanel = new JPanel();   
     JTabbedPane tabPaneCenter = new JTabbedPane();            
-    static Rectangle appScreenSize = new Rectangle();    
-    OptionsDialog optionsDialog = new OptionsDialog(new JFrame());        
+    static Rectangle appScreenSize = new Rectangle();          
       
     Color xipColor = new Color(51, 51, 102);
     Color xipLightBlue = new Color(156, 162, 189);
 	Font font = new Font("Tahoma", 0, 12);
     
 	String userName;			
-	WorklistPanel worklistPanel;
-	DicomPanel dicomPanel;
-	GridPanel gridPanel;
-	GlobalSearchPanel globalSearchPanel;
-	XDSPanel xdsPanel;
 	AVTPanel avt2extPanel;
 	
 	static Dimension screenSize;	
 	
 	public HostMainWindow(){
 		super("XIP Host");
-		worklistPanel = new WorklistPanel();
-		dicomPanel = new DicomPanel();
-		gridPanel = new GridPanel();
-		globalSearchPanel = new GlobalSearchPanel();
 		avt2extPanel = new AVTPanel();
-		xdsPanel = new XDSPanel();
 		if(HostConfigurator.OS.contains("Windows")){
 			setUndecorated(true);
 		}else{
@@ -83,14 +67,8 @@ public class HostMainWindow extends JFrame implements ActionListener {
                 
         //Add tabs        
         ImageIcon icon = null;
-        tabPaneCenter.addTab("AVT AD", icon, avt2extPanel, null);
-        tabPaneCenter.addTab("caGrid", icon, gridPanel, null);                      	   
-        tabPaneCenter.addTab("PACS", icon, dicomPanel, null);	   
-        tabPaneCenter.addTab("GlobalSearch", icon, globalSearchPanel, null);        
-        tabPaneCenter.addTab("XDS", icon, xdsPanel, null);
-        tabPaneCenter.addTab("Worklist", icon, worklistPanel, null);
+        tabPaneCenter.addTab("AVT AD", icon, avt2extPanel, null);              	          
         tabPaneCenter.setFont(font);
-        //tabPaneCenter.addMouseListener(mouseAdapterCenterTabs);
         
         toolBar.btnHost.addActionListener(this);
         toolBar.btnLocal.addActionListener(this);
@@ -148,7 +126,6 @@ public class HostMainWindow extends JFrame implements ActionListener {
     	}else if(e.getSource() == toolBar.btnOptions){
     		int x = (int)((JButton)e.getSource()).getLocationOnScreen().getX();
     		int y = (int)((JButton)e.getSource()).getLocationOnScreen().getY() + 45;  
-    		optionsDialog.display(x, y);
     	}else if (e.getSource() == toolBar.btnExit) {
 			HostConfigurator hostConfig = HostConfigurator.getHostConfigurator();
     		hostConfig.runHostShutdownSequence();    		    		

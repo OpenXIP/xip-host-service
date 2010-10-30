@@ -25,7 +25,6 @@ import org.nema.dicom.wg23.Status;
 import org.nema.dicom.wg23.Uid;
 import org.nema.dicom.wg23.Uuid;
 import edu.wustl.xipHost.application.Application;
-import edu.wustl.xipHost.hostControl.DataStore;
 
 
 /**
@@ -102,11 +101,9 @@ public class HostImpl implements Host{
 		return appTmpDir;				
 	}
 
-	public boolean notifyDataAvailable(AvailableData availableData, boolean lastData) {				
-		DataStore ds = new DataStore(availableData, app);
-		Thread t = new Thread(ds);
-		t.start();		
-		return true;
+	public boolean notifyDataAvailable(AvailableData availableData, boolean lastData) {					
+		
+		return false;
 	}
 
 
