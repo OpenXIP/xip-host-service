@@ -1,4 +1,4 @@
-<project name="XIPHost" default="all" basedir=".">
+<project name="XIPHostService" default="init" basedir=".">
    <description>
       XIP Host Reference Implementation, Washington University in Saint Louis, 2008
    </description>
@@ -8,23 +8,10 @@
    <property name="build" location="build" />
    <property name="build.lib" location="${build}/lib" />
    <property name="build.classes" location="${build}/classes" />	
-   <property name="resources" location="resources" />
    <property name="lib" location="lib" />
    <property name="lib.xip" location="lib/xip" />
-   <property name="lib.Xindice" location="lib/Xindice" />
-   <property name="lib.OHT" location="lib/OHT" />
    <property name="lib.AVT" location="lib/AVT" />
-   <property name="lib.NBIA" location="lib/NBIA" />
-   <property name="ext.lib" location="ext/lib"/>   
-   <property name="main-class" value="edu.wustl.xipHost.hostControl.HostConfigurator" />   
-   <property name="endorsed" location="endorsed"/>	
-	      
-   <target name="init">
-      <!-- Create the build directory structure used by compile -->
-      <mkdir dir="${build}" />
-      <mkdir dir="${build.lib}" />
-      <mkdir dir="${build.classes}" />     
-   </target>
+   <property name="warfile" value="xiphostservice"/>
    
    <path id="sourcepath">      
       <pathelement location="${src}" />     
@@ -32,54 +19,65 @@
          
    <path id="classpath">
    		<!-- order matters! -->         
-	    <fileset dir="${lib.xip}" includes="**/*.jar" />     
-	    <fileset dir="${ext.lib}" includes="**/*.jar" />     
-	    <fileset dir="${lib.Xindice}" includes="**/*.jar" />     
-	    <fileset dir="${lib.OHT}" includes="**/*.jar" />     
-    	<fileset dir="${lib.NBIA}" includes="**/*.jar" />     
+	    <fileset dir="${lib.xip}" includes="**/*.jar" />      
 	    <fileset dir="${lib.AVT}" includes="**/*.jar" />     
 	    <fileset dir="${lib}" />
-	    <!--fileset dir="${lib}" includes="**/*.jar" -->     
-	         <!--	<include name="caGrid-1.0-data-*.jar" /> -->
-	  	     <!--	<exclude name="caGrid-1.0-data-*.jar" /> -->
-	     <!--/fileset-->
    </path>
 
    <path id="run.classpath">
       <path refid="classpath" />
       <fileset dir="${build.lib}">
 	      <include name="*.jar" />
-      </fileset>
-      <fileset dir="${endorsed}" includes="**/*.jar"/>     	
+      </fileset>   	
    </path>  
 	
-   <target name="compile" depends="init" description="compile the source ">
+	<target name="init">
+		<!-- Create the build directory structure used by compile -->
+	    <mkdir dir="${build}" />
+	    <mkdir dir="${build.lib}" />
+	    <mkdir dir="${build.classes}" />     
+	</target>
+	
+	<target name="compile" depends="init" description="compile the source ">
       <!-- Compile the java code from ${src} into ${build.classes} -->
-      <javac srcdir="${src}" destdir="${build.classes}" debug="on" classpathref="classpath">
-      </javac>
+      <javac srcdir="${src}" destdir="${build.classes}" debug="on" classpathref="classpath"/>
    </target>  	
 	
-   <target name="jar" depends="compile" description="generate the distribution jar">
-      <!-- Put everything in ${build.classes} into the XXXX-${DSTAMP}.jar file -->
-      <jar jarfile="${build.lib}/XIPHost.jar" basedir="${build.classes}"/>
-   </target>
-   
-   <!-- =============================================================== -->   
-   <!-- Run application                                       		    -->   
-   <!-- =============================================================== -->
-   
-   <!--target name="run" depends="compile"-->
-   <target name="run">
-      <java classname="${main-class}" classpathref="run.classpath" fork="true" maxmemory="256m">
-	      <jvmarg value="-Djava.endorsed.dirs=${endorsed}"/>
-      </java>
-   </target>
-         
-   <target name="all" depends="jar" description="compile everything" />
+	<target name="create" depends="compile" description="creates war file">
+		<copy todir="${build.lib}" overwrite="true">
+			<fileset dir="${lib.xip}" includes="*.jar" />
+			<fileset dir="${lib.AVT}" includes="*.jar" />     
+			<fileset dir="${lib}" includes="*.jar"/>  
+		</copy>
+		<war destfile="${warfile}.war" webxml="webcontent/WEB-INF/web.xml" update="true">
+			<lib dir="${build.lib}"/>
+			<classes dir="${build.classes}"/>
+			<fileset dir="webcontent">
+				<exclude name="WEB-INF/web.xml"/>
+			</fileset>
+		</war>
+	</target>
+		
+	<target name="copy">
+		<copy todir="/Users/Jarek/DevTools/apache-tomcat-6.0.24/webapps" overwrite="true">
+			<fileset dir=".">
+				<include name="*.war"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="deploy">
+		<antcall target="create"/>
+		<antcall target="copy"/>
+	</target>
    
    <target name="clean" description="clean up">
       <!-- Delete the ${build} directory tree -->
       <delete dir="${build}" />
    </target>
+	
+	<target name="unpack">
+			<unwar src="${warfile}.war" dest="${warfile}" />
+		</target>
 
 </project>

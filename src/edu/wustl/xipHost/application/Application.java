@@ -99,22 +99,7 @@ public class Application implements TargetIteratorListener, AVTRetrieve2Listener
 			this.concurrentInstances = concurrentInstances;
 			this.iterationTarget = iterationTarget;
 		}		
-	}
-	
-	
-	//verify this pattern
-	/*public boolean verifyFileName(String fileName){		
-		String str = "/ \\ : * ? \" < > | ,  ";		
-        Pattern filePattern = Pattern.compile(str);             
-        boolean matches = filePattern.matcher(fileName).matches();
-        return matches;
-    }
-	
-	public static void main (String args[]){
-		Application app = new Application("ApplicationTest", new File("test.txt"), "", "");
-		System.out.println(app.getExePath().getName());
-		System.out.println(app.verifyFileName(app.getExePath().getName()));
-	}*/		
+	}		
 		
 	public UUID getID(){
 		return id;

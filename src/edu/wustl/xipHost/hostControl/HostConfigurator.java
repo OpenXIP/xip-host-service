@@ -3,8 +3,6 @@
  */
 package edu.wustl.xipHost.hostControl;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -12,8 +10,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.xml.ws.Endpoint;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -26,7 +22,6 @@ import org.nema.dicom.wg23.State;
 import edu.wustl.xipHost.application.Application;
 import edu.wustl.xipHost.application.ApplicationManager;
 import edu.wustl.xipHost.application.ApplicationManagerFactory;
-import edu.wustl.xipHost.avt2ext.iterator.IterationTarget;
 
 public class HostConfigurator {
 	final static Logger logger = Logger.getLogger(HostConfigurator.class);	 
@@ -51,17 +46,11 @@ public class HostConfigurator {
     	xipApplicationsConfig = new File("./config/applications.xml");	
     	try {
 			appMgr.loadApplications(xipApplicationsConfig);
-			//Load test applications, RECIST is currently supported on Windows only			
-			boolean loadTestApps = false;
-			if(loadTestApps){
-				loadTestApplications();
-			}
 		} catch (JDOMException e) {
 			System.exit(0);
 		} catch (IOException e) {
 			System.exit(0);
 		}
-		//hostOutDir and hostTmpDir are hold in static variables in ApplicationManager
 		appMgr.setOutputDir(hostOutDir);		
 		appMgr.setTmpDir(hostTmpDir);					
 		return true;			
@@ -221,25 +210,7 @@ public class HostConfigurator {
 	Endpoint ep;
         
 	static HostConfigurator hostConfigurator;
-	public static void main (String [] args){
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());			
-			//UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (InstantiationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IllegalAccessException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}		        				
-		//Turn off commons loggin for better performance
-		System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.NoOpLog");		
+	public static void main (String [] args){		
 		DOMConfigurator.configure("log4j.xml");
 		hostConfigurator = new HostConfigurator();
 		boolean startupOK = hostConfigurator.runHostStartupSequence();
@@ -247,10 +218,6 @@ public class HostConfigurator {
 			logger.fatal("XIPHost startup error. System exits.");
 			System.exit(0);
 		}		
-		/*final long MEGABYTE = 1024L * 1024L;
-		System.out.println("Total heap size: " + (Runtime.getRuntime().maxMemory())/MEGABYTE);
-		System.out.println("Used heap size: " + (Runtime.getRuntime().totalMemory())/MEGABYTE);
-		System.out.println("Free heap size: " + (Runtime.getRuntime().freeMemory())/MEGABYTE);*/
 	}
 	
 	public static HostConfigurator getHostConfigurator(){
@@ -291,113 +258,6 @@ public class HostConfigurator {
         }
         // Visit each thread group  
         System.exit(0);	
-        visit(root, 0);
 	}
-	
-	void loadTestApplications(){
-		if(OS.contains("Windows")){								
-			if(appMgr.getApplication("TestApp_WG23FileAccess") == null){
-				try {
-					String pathExe = new File("./../XIPApp/bin/edu/wustl/xipApplication/samples/XIPApplication_WashU_3.bat").getCanonicalPath();
-					File exeFile = new File(pathExe);
-					String pathIcon = new File("./../XIPApp/bin/edu/wustl/xipApplication/samples/ApplicationIcon-16x16.png").getCanonicalPath();
-					File iconFile = new File(pathIcon);				
-					appMgr.addApplication(new Application("TestApp_WG23FileAccess", exeFile, "", "", iconFile, "analytical", true, "files", 1, IterationTarget.SERIES));
-				}catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if(appMgr.getApplication("TestApp_WG23NativeModel") == null){
-				try{	
-					String pathExe = new File("./../XIPApp/bin/edu/wustl/xipApplication/samples/XIPAppNativeModel.bat").getCanonicalPath();
-					File exeFile = new File(pathExe);
-					String pathIcon = new File("./../XIPApp/bin/edu/wustl/xipApplication/samples/ApplicationIcon-16x16.png").getCanonicalPath();
-					File iconFile = new File(pathIcon);
-					appMgr.addApplication(new Application("TestApp_WG23NativeModel", exeFile, "", "", iconFile, "analytical", true, "native", 1, IterationTarget.SERIES));
-				}catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if(appMgr.getApplication("RECIST_Adjudicator") == null){				
-				try {
-					String pathExe = new File("../XIPApp/bin/RECISTFollowUpAdjudicator.bat").getCanonicalPath();
-					File exeFile = new File(pathExe);
-					String pathIcon = new File("./../XIPApp/bin/edu/wustl/xipApplication/samples/ApplicationIcon-16x16.png").getCanonicalPath();
-					File iconFile = new File(pathIcon);
-					appMgr.addApplication(new Application("RECIST_Adjudicator", exeFile, "", "", iconFile, "rendering", true, "files", 1, IterationTarget.SERIES));
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
-			}				
-		}else{
-			if(appMgr.getApplication("TestApp_WG23FileAccess") == null){
-				try {
-					String pathExe = new File("./../XIPApp/bin/edu/wustl/xipApplication/samples/XIPApplication_WashU_3.sh").getCanonicalPath();
-					File exeFile = new File(pathExe);
-					String pathIcon = new File("./../XIPApp/bin/edu/wustl/xipApplication/samples/ApplicationIcon-16x16.png").getCanonicalPath();
-					File iconFile = new File(pathIcon);				
-					appMgr.addApplication(new Application("TestApp_WG23FileAccess", exeFile, "", "", iconFile, "analytical", true, "files", 1, IterationTarget.SERIES));
-				}catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if(appMgr.getApplication("TestApp_WG23NativeModel") == null){
-				try{	
-					String pathExe = new File("./../XIPApp/bin/edu/wustl/xipApplication/samples/XIPAppNativeModel.sh").getCanonicalPath();
-					File exeFile = new File(pathExe);
-					String pathIcon = new File("./../XIPApp/bin/edu/wustl/xipApplication/samples/ApplicationIcon-16x16.png").getCanonicalPath();
-					File iconFile = new File(pathIcon);
-					appMgr.addApplication(new Application("TestApp_WG23NativeModel", exeFile, "", "", iconFile, "analytical", true, "native", 1, IterationTarget.SERIES));
-				}catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-		
-	public static int adjustForResolution(){
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize(); 
-		int height = (int)screenSize.getHeight();
-		int preferredHeight = 600;
-		if (height < 768 && height >= 600 ){
-			preferredHeight = 350;
-		}else if(height < 1024 && height >= 768 ){
-			preferredHeight = 470;
-		}else if (height >= 1024 && height < 1200){
-			preferredHeight = 600;
-		}else if(height > 1200 && height <= 1440){
-			preferredHeight = 800;
-		}
-		return preferredHeight;		
-	}
-	
-	public static void visit(ThreadGroup group, int level) {
-        // Get threads in `group'
-        int numThreads = group.activeCount();
-        Thread[] threads = new Thread[numThreads * 2];
-        numThreads = group.enumerate(threads, false);
- 
-        // Enumerate each thread in `group'
-        for (int i = 0; i < numThreads; i++) {
-            // Get thread
-            Thread thread = threads[i];
-            System.out.println(thread.getName());
-        }
- 
-        // Get thread subgroups of `group'
-        int numGroups = group.activeGroupCount();
-        ThreadGroup[] groups = new ThreadGroup[numGroups * 2];
-        numGroups = group.enumerate(groups, false);
- 
-        // Recursively visit each subgroup
-        for (int i = 0; i < numGroups; i++) {
-            visit(groups[i], level + 1);
-        }
-    }
 	
 }
