@@ -44,6 +44,10 @@ public class HostImpl implements Host{
 		app = application;		
 	}
 	
+	public HostImpl(){
+		
+	}
+	
 	public Uid generateUID() {
 		Uid uid = new Uid();
 		UUID id = UUID.randomUUID();
