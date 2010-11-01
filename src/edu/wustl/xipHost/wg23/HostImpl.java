@@ -79,7 +79,6 @@ public class HostImpl implements Host{
 		String appOutDir = null;		
 		try {
 			appOutDir = app.getApplicationOutputDir().toURI().toURL().toExternalForm();
-			//appOutDir = app.getApplicationOutputDir().getCanonicalPath();
 		} catch (MalformedURLException e) {
 
 		}		
@@ -90,7 +89,6 @@ public class HostImpl implements Host{
 		String appTmpDir = null;;
 		try {
 			appTmpDir = app.getApplicationTmpDir().toURI().toURL().toExternalForm();
-			//appTmpDir = app.getApplicationTmpDir().getCanonicalPath();
 		} catch (MalformedURLException e) {
 			
 		}		
@@ -98,7 +96,7 @@ public class HostImpl implements Host{
 	}
 
 	public boolean notifyDataAvailable(AvailableData availableData, boolean lastData) {					
-		
+		//TODO
 		return false;
 	}
 
@@ -180,13 +178,11 @@ public class HostImpl implements Host{
             default: 
             	throw new StateChangeException("Requested state: " + state.toString() + ", current app state: " + currState);            	
         }
-        //System.out.println("HostImpl l. 190 Application: " + app.getState().toString());
 	}
 	
 
 	public void notifyStatus(Status newStatus) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	public ArrayOfQueryResult queryModel(ArrayOfUUID objUUIDs, ArrayOfString modelXpaths, boolean includeBulkDataPointers) {
