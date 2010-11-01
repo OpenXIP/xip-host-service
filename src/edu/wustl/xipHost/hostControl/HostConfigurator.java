@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.xml.ws.Endpoint;
@@ -24,22 +23,16 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import org.nema.dicom.wg23.State;
-import org.xmldb.api.base.XMLDBException;
 import edu.wustl.xipHost.application.Application;
 import edu.wustl.xipHost.application.ApplicationManager;
 import edu.wustl.xipHost.application.ApplicationManagerFactory;
 import edu.wustl.xipHost.avt2ext.iterator.IterationTarget;
-import edu.wustl.xipHost.gui.ConfigPanel;
-import edu.wustl.xipHost.gui.ExceptionDialog;
-import edu.wustl.xipHost.gui.HostMainWindow;
 
 public class HostConfigurator {
 	final static Logger logger = Logger.getLogger(HostConfigurator.class);	 
 	File hostTmpDir;
 	File hostOutDir;
-	File hostConfig;
-	HostMainWindow mainWindow;
-	ConfigPanel configPanel = new ConfigPanel(new JFrame()); 		//ConfigPanel is used to specify tmp and output dirs	
+	File hostConfig;	
 	ApplicationManager appMgr;
 	File xipApplicationsConfig;	
 	public static final String OS = System.getProperty("os.name");
@@ -49,15 +42,8 @@ public class HostConfigurator {
 		logger.info("Launching XIPHost. Platform " + OS);
 		hostConfig = new File("./config/xipConfig.xml");
 		if(loadHostConfigParameters(hostConfig) == false){		
-			new ExceptionDialog("Unable to load Host configuration parameters.", 
-					"Ensure host config file and Pixelmed/HSQLQB config file are valid.",
-					"Host Startup Dialog");
 			System.exit(0);
-		}
-		//if config contains displayConfigDialog true -> displayConfigDialog
-		if(getDisplayStartUp()){
-			displayConfigDialog();			
-		}		
+		}	
 		hostTmpDir = createSubTmpDir(getParentOfTmpDir());		
 		hostOutDir = createSubOutDir(getParentOfOutDir());
 				
@@ -71,35 +57,13 @@ public class HostConfigurator {
 				loadTestApplications();
 			}
 		} catch (JDOMException e) {
-			new ExceptionDialog("Unable to load applications.", 
-					"Ensure applications xml config file exists and is valid.",
-					"Host Startup Dialog");
 			System.exit(0);
 		} catch (IOException e) {
-			new ExceptionDialog("Unable to load applications.", 
-					"Ensure applications xml config file exists and is valid.",
-					"Host Startup Dialog");
 			System.exit(0);
 		}
 		//hostOutDir and hostTmpDir are hold in static variables in ApplicationManager
 		appMgr.setOutputDir(hostOutDir);		
-		appMgr.setTmpDir(hostTmpDir);		
-		
-		//XindiceManager is used to register XMLDB database used to store and manage
-		//XML Native Models
-		XindiceManager xm = XindiceManagerFactory.getInstance();
-		try {
-			xm.startup();
-		} catch (XMLDBException e) {
-			//TODO Auto-generated catch block
-			//Q: what to do if Xindice is not launched
-			//1. Go with no native model support or 
-			//2. prompt user and exit
-			e.printStackTrace();
-		}				
-		mainWindow = new HostMainWindow();											
-		mainWindow.setUserName(userName);			
-		mainWindow.display();					
+		appMgr.setTmpDir(hostTmpDir);					
 		return true;			
 	}
 			
@@ -233,17 +197,6 @@ public class HostConfigurator {
 		return outFile;
 	}
 	
-	
-	void displayConfigDialog(){							
-		configPanel.setParentOfTmpDir(getParentOfTmpDir());
-		configPanel.setParentOfOutDir(getParentOfOutDir());
-		configPanel.setDisplayStartup(getDisplayStartUp());
-		configPanel.display();    		
-		setParentOfTmpDir(configPanel.getParentOfTmpDir());
-		setParentOfOutDir(configPanel.getParentOfOutDir());
-		setDisplayStartUp(configPanel.getDisplayStartup());				
-	}	
-	
 	public void storeHostConfigParameters(File hostConfigFile) {      			
 		root.getChild("tmpDir").setText(parentOfTmpDir);
 		root.getChild("outputDir").setText(parentOfOutDir);
@@ -304,10 +257,6 @@ public class HostConfigurator {
 		return hostConfigurator;
 	}
 	
-	public HostMainWindow getMainWindow(){
-		return mainWindow;
-	}
-	
 	public void runHostShutdownSequence(){		
 		//TODO
 		//Host can terminate only if no applications are running (verify applications are not running)
@@ -316,9 +265,6 @@ public class HostConfigurator {
 			State state = app.getState();			
 			if(state != null && state.equals(State.EXIT) == false ){
 				if(app.shutDown() == false){
-					new ExceptionDialog(app.getName() + " cannot be terminated by host.", 
-							"Application current state: " + app.getState().toString() + ".",
-							"Host Shutdown Dialog");
 					return;
 				}
 			}
@@ -333,13 +279,8 @@ public class HostConfigurator {
 		File dir = new File(getParentOfTmpDir());				
 		boolean bln = Util.deleteHostTmpFiles(dir);
 		if(bln == false){
-			new ExceptionDialog("Not all content of Host TMP directory " + hostTmpDir + " was cleared.", 
-					"Only subdirs starting with 'TmpXIP' and ending with '.tmp' and their content is deleted.",
-					"Host Shutdown Dialog");
+			
 		}			
-		XindiceManagerFactory.getInstance().shutdown();
-		//Clear Xindice directory. Ensures all documents and collections are cleared even when application
-		//does not terminate properly
 		Util.delete(new File("./db"));
 		logger.info("XIPHost exits. Thank you for using XIP Host.");
 		

@@ -34,7 +34,6 @@ import org.nema.dicom.wg23.Uuid;
 import edu.wustl.xipHost.application.Application;
 import edu.wustl.xipHost.application.ApplicationManagerFactory;
 import edu.wustl.xipHost.dicom.DicomUtil;
-import edu.wustl.xipHost.gui.InputDialog;
 import edu.wustl.xipHost.wg23.WG23DataModel;
 
 /**
@@ -43,7 +42,6 @@ import edu.wustl.xipHost.wg23.WG23DataModel;
  */
 public class FileManagerImpl implements FileManager, DicomParseListener {
 	
-	InputDialog inputDialog = new InputDialog();
 	int numThreads = 3;
 	ExecutorService exeService = Executors.newFixedThreadPool(numThreads);			
 	
@@ -70,32 +68,26 @@ public class FileManagerImpl implements FileManager, DicomParseListener {
 	int j = 0;		
 	boolean isParsingCompleted = false;
 	public synchronized void dicomAvailable(DicomParseEvent e) {					
-		inputDialog.setCursor(hourglassCursor);
+		
 		FileRunner source = (FileRunner)e.getSource();
 		File file = source.getItem();
 		String[][] result = source.getParsingResult();
 		parsedResults.add(result);
-		inputDialog.setParsingResult(file.toURI(), result);
-		inputDialog.updateUI();
 		j++;
 		if(j == items.length){
 			j = 0;
-			isParsingCompleted = true;
-			inputDialog.setCursor(normalCursor);			
+			isParsingCompleted = true;			
 		}
 	}		
 		
 	public synchronized void nondicomAvailable(DicomParseEvent e) {
 		FileRunner source = (FileRunner)e.getSource();
-		File file = source.getItem();
-		inputDialog.setParsingResult(file.toURI(), null);		
+		File file = source.getItem();		
 		j++;
 		if(j == items.length){
 			j = 0;
 			isParsingCompleted = true;
-			inputDialog.setCursor(normalCursor);			
 		}
-		inputDialog.updateUI();
 	}
 	
 	public List<String[][]> getParsedResults(){
@@ -126,8 +118,6 @@ public class FileManagerImpl implements FileManager, DicomParseListener {
 			appMap.put(name, app);
 		}
 		Collection<Application> values = appMap.values();			
-		inputDialog.setApplications(new ArrayList<Application>(values));
-		
 		//inputDialog.display();				
 		//parse(items);
 		
@@ -138,8 +128,6 @@ public class FileManagerImpl implements FileManager, DicomParseListener {
 		
 	void displayItems(File[] items){
 		this.items = items;		
-		inputDialog.setItems(items);
-		inputDialog.updateUI();
 	}
 	
 	public WG23DataModel makeWG23DataModel(List<File> files){
@@ -199,17 +187,6 @@ public class FileManagerImpl implements FileManager, DicomParseListener {
 		WG23DataModel data = makeWG23DataModel(listFiles);
 		return data;
 	}	
-	
-	public static void main(String args[]){
-		HostFileChooser fileChooser = new HostFileChooser(true, new File("C:/WUSTL/Tmp/RECIST"));
-		fileChooser.setVisible(true);
-		File[] files = fileChooser.getSelectedItems();
-		if(files == null){
-			return;
-		}
-		FileManager fileMgr = FileManagerFactory.getInstance();
-		fileMgr.run(files);		
-	}
 	
 	List<ObjectLocator> objLocators;
 	AvailableData groupDicomItems(List<String[][]> parsedResults){		

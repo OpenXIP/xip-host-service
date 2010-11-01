@@ -11,7 +11,6 @@ import com.pixelmed.dicom.Attribute;
 import com.pixelmed.dicom.AttributeList;
 import com.pixelmed.dicom.DicomException;
 import com.pixelmed.dicom.TagFromName;
-import edu.wustl.xipHost.gui.ExceptionDialog;
 /**
  * <font  face="Tahoma" size="2">
  * Parses DICOM file and retrieves commonly used attribues.<br></br>
@@ -50,10 +49,7 @@ public class BasicDicomParser2 {
 				System.out.println(strAtt + " " + attValue);
 			}*/
 		} catch (IOException e) {			
-			new ExceptionDialog("DICOM Exception!", 
-					dicomFile.getName() + " is not DICOM file!",
-					"Data for this file will not be saved.");
-			//e.printStackTrace();
+
 		} catch (DicomException e) {		
 			e.printStackTrace();
 		}				

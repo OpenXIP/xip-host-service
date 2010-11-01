@@ -1,3 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<applications />
+<applications>
+  <application>
+    <name>RECIT</name>
+    <exePath>C:\OurDocuments\SoftwareDev\XIP_SVN\XIPApp\bin\RECIST.bat</exePath>
+    <vendor />
+    <version />
+    <iconFile />
+    <type>rendering</type>
+    <requiresGUI>false</requiresGUI>
+    <wg23DataModelType>files</wg23DataModelType>
+    <concurrentInstances>1</concurrentInstances>
+    <iterationTarget>SERIES</iterationTarget>
+  </application>
+  <application>
+    <name>RECIT2</name>
+    <exePath>C:\OurDocuments\SoftwareDev\XIP_SVN\XIPApp\bin\RECIST.bat</exePath>
+    <vendor />
+    <version />
+    <iconFile />
+    <type>rendering</type>
+    <requiresGUI>false</requiresGUI>
+    <wg23DataModelType>files</wg23DataModelType>
+    <concurrentInstances>1</concurrentInstances>
+    <iterationTarget>SERIES</iterationTarget>
+  </application>
+  <application>
+    <name>Lazy Retrieve Test</name>
+    <exePath>C:\OurDocuments\SoftwareDev\XIP_SVN\XIPApp\bin\edu\wustl\xipApplication\samples\XIPAppLazyRetrieveTest.bat</exePath>
+    <vendor>Jarek</vendor>
+    <version>1.0</version>
+    <iconFile>C:\OurDocuments\SoftwareDev\XIP_SVN\XIPApp\bin\edu\wustl\xipApplication\samples\ApplicationIcon-16x16.png</iconFile>
+    <type>analytical</type>
+    <requiresGUI>false</requiresGUI>
+    <wg23DataModelType>files</wg23DataModelType>
+    <concurrentInstances>1</concurrentInstances>
+    <iterationTarget>SERIES</iterationTarget>
+  </application>
+  <application>
+    <name>Lazy Retrieve Test 2</name>
+    <exePath>C:\OurDocuments\SoftwareDev\XIP_SVN\XIPApp\bin\edu\wustl\xipApplication\samples\XIPAppLazyRetrieveTest.bat</exePath>
+    <vendor />
+    <version />
+    <iconFile />
+    <type>analytical</type>
+    <requiresGUI>false</requiresGUI>
+    <wg23DataModelType>files</wg23DataModelType>
+    <concurrentInstances>1</concurrentInstances>
+    <iterationTarget>SERIES</iterationTarget>
+  </application>
+</applications>
 

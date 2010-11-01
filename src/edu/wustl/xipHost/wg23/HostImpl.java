@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008 Washington University in Saint Louis. All Rights Reserved.
+ * Copyright (c) 2010 Washington University in St. Louis. All Rights Reserved.
  */
 package edu.wustl.xipHost.wg23;
 
@@ -18,7 +18,6 @@ import org.nema.dicom.wg23.AvailableData;
 import org.nema.dicom.wg23.Host;
 import org.nema.dicom.wg23.ModelSetDescriptor;
 import org.nema.dicom.wg23.ObjectLocator;
-import org.nema.dicom.wg23.QueryResult;
 import org.nema.dicom.wg23.Rectangle;
 import org.nema.dicom.wg23.State;
 import org.nema.dicom.wg23.Status;
@@ -40,7 +39,6 @@ public class HostImpl implements Host{
 	final static Logger logger = Logger.getLogger(HostImpl.class);
 	Application app;
 	List<ObjectLocator> objLocs;	
-	//ClientToApplication clientToApplication;
 	
 	public HostImpl(Application application){
 		app = application;		
@@ -53,20 +51,18 @@ public class HostImpl implements Host{
 		return uid;
 	}
 
-	public ModelSetDescriptor getAsModels(ArrayOfUUID uuids, Uid classUID, Uid transferSyntaxUID) {	
-		//TODO make use of transfersyntaxUID is not empty
-		List<Uuid> objUUIDs = uuids.getUuid();		
-		return  app.getModelSetDescriptor(objUUIDs);		
+	public ModelSetDescriptor getAsModels(ArrayOfUUID uuids, Uid classUID, Uid transferSyntaxUID) {			
+		//TODO
+		return  null;		
 	}
 
-	public Rectangle getAvailableScreen(Rectangle appPreferredScreen) {
-		Rectangle size = app.getApplicationPreferredSize();		
-		return size;
+	public Rectangle getAvailableScreen(Rectangle appPreferredScreen) {		
+		//TODO
+		return null;
 	}
 
 	public ArrayOfObjectLocator getDataAsFile(ArrayOfUUID uuids, boolean includeBulkData){ 			
-		// Get corresponding object locators for uuids 
-		//TODO make use of includeBulkData
+		
 		ArrayOfObjectLocator arrayObjLoc = new ArrayOfObjectLocator();
 		List<Uuid> listUUIDs = uuids.getUuid();
 		objLocs = app.retrieveAndGetLocators(listUUIDs);
@@ -75,7 +71,7 @@ public class HostImpl implements Host{
 	}
 
 	public ArrayOfObjectLocator getDataAsSpecificTypeFile(ArrayOfUUID objectUUIDs, String mimeType, Uid transferSyntaxUID, boolean includeBulkData) {
-		// TODO Auto-generated method stub
+		//TODO
 		return null;
 	}	
 
@@ -194,19 +190,7 @@ public class HostImpl implements Host{
 	}
 
 	public ArrayOfQueryResult queryModel(ArrayOfUUID objUUIDs, ArrayOfString modelXpaths, boolean includeBulkDataPointers) {
-		//TODO make use of includeBulkDataPointers
-		List<Uuid> modelUUIDs = objUUIDs.getUuid();
-		/*for(int i = 0; i < modelUUIDs.size(); i++){
-			System.out.println(modelUUIDs.get(i).getUuid());
-		}
-		System.out.println("------------------------------------");*/
-		List<String> listXPaths = modelXpaths.getString();				
-		List<QueryResult> results = app.queryModel(modelUUIDs, listXPaths);		
-		ArrayOfQueryResult arrayResults = new ArrayOfQueryResult();		
-		List<QueryResult> listResults = arrayResults.getQueryResult();
-		for(int i = 0; i < results.size(); i++){
-			listResults.add(results.get(i));
-		}		
-		return arrayResults;
+		//TODO
+		return null;
 	}
 }

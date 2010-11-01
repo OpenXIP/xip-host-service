@@ -6,11 +6,9 @@ package edu.wustl.xipHost.application;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -21,15 +19,10 @@ import javax.xml.ws.Endpoint;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.log4j.Logger;
-import org.jdom.Document;
-import org.nema.dicom.wg23.ArrayOfString;
-import org.nema.dicom.wg23.ArrayOfUUID;
 import org.nema.dicom.wg23.Host;
-import org.nema.dicom.wg23.ModelSetDescriptor;
 import org.nema.dicom.wg23.ObjectDescriptor;
 import org.nema.dicom.wg23.ObjectLocator;
 import org.nema.dicom.wg23.Patient;
-import org.nema.dicom.wg23.QueryResult;
 import org.nema.dicom.wg23.Rectangle;
 import org.nema.dicom.wg23.Series;
 import org.nema.dicom.wg23.State;
@@ -49,19 +42,13 @@ import edu.wustl.xipHost.avt2ext.iterator.TargetElement;
 import edu.wustl.xipHost.avt2ext.iterator.TargetIteratorRunner;
 import edu.wustl.xipHost.avt2ext.iterator.TargetIteratorListener;
 import edu.wustl.xipHost.dataModel.SearchResult;
-import edu.wustl.xipHost.dicom.DicomUtil;
-import edu.wustl.xipHost.gui.HostMainWindow;
 import edu.wustl.xipHost.hostControl.Util;
-import edu.wustl.xipHost.hostControl.XindiceManager;
-import edu.wustl.xipHost.hostControl.XindiceManagerFactory;
 import edu.wustl.xipHost.wg23.ClientToApplication;
 import edu.wustl.xipHost.wg23.HostImpl;
-import edu.wustl.xipHost.wg23.NativeModelListener;
-import edu.wustl.xipHost.wg23.NativeModelRunner;
 import edu.wustl.xipHost.wg23.StateExecutor;
 import edu.wustl.xipHost.wg23.WG23DataModel;
 
-public class Application implements NativeModelListener, TargetIteratorListener, AVTRetrieve2Listener {	
+public class Application implements TargetIteratorListener, AVTRetrieve2Listener {	
 	final static Logger logger = Logger.getLogger(Application.class);
 	UUID id;
 	String name;
@@ -264,7 +251,6 @@ public class Application implements NativeModelListener, TargetIteratorListener,
 		this.appServiceURL = appServiceURL;				
 		setApplicationOutputDir(ApplicationManagerFactory.getInstance().getOutputDir());
 		setApplicationTmpDir(ApplicationManagerFactory.getInstance().getTmpDir());
-		setApplicationPreferredSize(HostMainWindow.getApplicationPreferredSize());
 		//prepare native models
 		//createNativeModels(getWG23DataModel());		
 		//diploy host service				
@@ -384,7 +370,6 @@ public class Application implements NativeModelListener, TargetIteratorListener,
 		if (state.equals(State.IDLE)){
 			if(firstLaunch){
 				startClientToApplication();
-				notifyAddSideTab();
 				firstLaunch = false;
 				StateExecutor stateExecutor = new StateExecutor(this);
 				stateExecutor.setState(State.INPROGRESS);
@@ -476,10 +461,7 @@ public class Application implements NativeModelListener, TargetIteratorListener,
 		} else if (state.equals(State.EXIT)){
 			//Application runShutDownSequence goes through ApplicationTerminator and Application Scheduler
 			//ApplicationScheduler time is set to zero but other value could be used when shutdown delay is needed.
-			ApplicationTerminator terminator = new ApplicationTerminator(this);
-			Thread t = new Thread(terminator);
-			t.start();	
-			//reset application parameters for subsequent launch
+			
 			firstLaunch = true;
 			retrievedTargetElements.clear();
 			targetElements.clear();
@@ -532,10 +514,6 @@ public class Application implements NativeModelListener, TargetIteratorListener,
 		return appServiceURL;
 	}		
 		
-	public void notifyAddSideTab(){	
-		HostMainWindow.addTab(getName(), getID());
-	}
-		
 	public void bringToFront(){
 		clientToApplication.bringToFront();
 	}
@@ -554,7 +532,6 @@ public class Application implements NativeModelListener, TargetIteratorListener,
 	}
 	
 	public void runShutDownSequence(){
-		HostMainWindow.removeTab(getID());		
 		if(getHostEndpoint() != null){
 			getHostEndpoint().stop();
 		}	
@@ -579,119 +556,6 @@ public class Application implements NativeModelListener, TargetIteratorListener,
 		}else{
 			return false;
 		}
-	}
-	
-	
-	/**
-	 * Method is used to create XML native models for all object locators
-	 * found  in WG23DataModel.
-	 * It uses threads and add NativeModelListener to the NativeModelRunner
-	 * @param wg23dm
-	 */
-	void createNativeModels(WG23DataModel wg23dm){
-		if(XindiceManagerFactory.getInstance().createCollection(getID().toString())){
-			ObjectLocator[] objLocs = wg23dm.getObjectLocators();
-			for (int i = 0; i < objLocs.length; i++){										
-				boolean isDICOM = false;
-				try {
-					isDICOM = DicomUtil.isDICOM(new File(new URI(objLocs[i].getUri())));
-				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if(isDICOM){
-					NativeModelRunner nmRunner;
-					nmRunner = new NativeModelRunner(objLocs[i]);
-					nmRunner.addNativeModelListener(this);
-					Thread t = new Thread(nmRunner);
-					t.start();
-				}								
-			}
-		}else{
-			//TODO
-			//Action when system cannot create collection
-		}
-		
-	}
-	
-	/**
-	 * Adds JDOM Document to Xindice collection.
-	 * Only valid documents (e.g. not null, with root element) will be added
-	 * (non-Javadoc)
-	 * @see edu.wustl.xipHost.wg23.NativeModelListener#nativeModelAvailable(org.jdom.Document, org.nema.dicom.wg23.Uuid)
-	 */
-	public void nativeModelAvailable(Document doc, Uuid objUUID) {				
-		XindiceManagerFactory.getInstance().addDocument(doc, getID().toString(), objUUID);		
-	}
-		
-	public void nativeModelAvailable(String xmlNativeModel) {
-		// Ignore in XIP Host. 
-		// Used by AVT AD		
-	}	
-
-	/**
-	 * Method returns ModelSetDescriptor containing UUID of native models
-	 * as well as UUID of object locators for which native models could
-	 * not be created
-	 * @param objUUIDs
-	 * @return
-	 */	
-	 public ModelSetDescriptor getModelSetDescriptor(List<Uuid> objUUIDs){				
-		String[] models = XindiceManagerFactory.getInstance().getModelUUIDs(getID().toString());							
-		List<String> listModels = Arrays.asList(models);
-		ModelSetDescriptor msd = new ModelSetDescriptor();
-		ArrayOfUUID uuidsModels = new ArrayOfUUID();
-		List<Uuid> listUUIDs = uuidsModels.getUuid();
-		ArrayOfUUID uuidsFailed = new ArrayOfUUID();
-		List<Uuid> listUUIDsFailed = uuidsFailed.getUuid();
-		for(int i = 0; i < objUUIDs.size(); i++){
-			Uuid uuid = new Uuid();
-			if(objUUIDs.get(i) == null || objUUIDs.get(i).getUuid() == null){
-				//do not add anything to model set descriptor
-			}else if(objUUIDs.get(i).getUuid().toString().trim().isEmpty()){
-				//do not add anything to model set descriptor
-			}else if(listModels.contains("wg23NM-"+ objUUIDs.get(i).getUuid())){				
-				int index = listModels.indexOf("wg23NM-"+ objUUIDs.get(i).getUuid());
-				uuid.setUuid(listModels.get(index));
-				listUUIDs.add(uuid);
-			}else{
-				uuid.setUuid(objUUIDs.get(i).getUuid());
-				listUUIDsFailed.add(uuid);
-			}		
-		}					
-		msd.setModels(uuidsModels);
-		msd.setFailedSourceObjects(uuidsFailed);		
-		return msd;
-	}
-	
-	/**
-	 * queryResults list hold teh values from queryResultAvailable
-	 */
-	List<QueryResult> queryResults;
-	public List<QueryResult> queryModel(List<Uuid> modelUUIDs, List<String> listXPaths){
-		queryResults = new ArrayList<QueryResult>();
-		if(modelUUIDs == null || listXPaths == null){
-			return queryResults;
-		}
-		String collectionName = getID().toString();		
-		XindiceManager xm = XindiceManagerFactory.getInstance();			
-		for(int i = 0; i < listXPaths.size(); i++){
-			for(int j = 0; j < modelUUIDs.size(); j++){
-				//String[] results = xm.query(service, collectionName, modelUUIDs.get(j), listXPaths.get(i));
-				String[] results = xm.query(collectionName, modelUUIDs.get(j), listXPaths.get(i));
-				QueryResult queryResult = new QueryResult();
-				queryResult.setModel(modelUUIDs.get(j));
-				queryResult.setXpath(listXPaths.get(i));
-				ArrayOfString arrayOfString = new ArrayOfString();
-				List<String> listString = arrayOfString.getString();
-				for(int k = 0; k < results.length; k++){							
-					listString.add(results[k]);
-				}		
-				queryResult.setResults(arrayOfString);	
-				queryResults.add(queryResult);
-			}
-		}				
-		return queryResults;		
 	}
 
 	Iterator<TargetElement> iter;
