@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+<display-name>XIP Host Service</display-name>
+	<description>
+		This is version 1.0 of XIP Host Service
+		based on WG-23 interface.
+	</description>
+	<listener>
+		<listener-class>
+			com.sun.xml.ws.transport.http.servlet.WSServletContextListener
+		</listener-class>
+	</listener>
+	
+	<servlet>
+		<servlet-name>xiphostservice</servlet-name>
+		<servlet-class>
+			com.sun.xml.ws.transport.http.servlet.WSServlet
+		</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>xiphostservice</servlet-name>
+		<url-pattern>/host</url-pattern>
+	</servlet-mapping>
+	<session-config>
+		<session-timeout>35</session-timeout> <!-- 35 minutes -->
+	</session-config>
+</web-app>
