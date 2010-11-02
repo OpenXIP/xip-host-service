@@ -107,7 +107,7 @@ public class HostImpl implements Host{
 
 	ExecutorService stateExeService = Executors.newFixedThreadPool(1);
 	public void notifyStateChanged(State newState) {		
-		logger.debug("Requested state change to " + newState.toString() + " of \"" + app.getName() + "\"");
+		//logger.debug("Requested state change to " + newState.toString() + " of \"" + app.getName() + "\"");
 		try {
 			changeState(newState);					
 		} catch (StateChangeException e) {			
