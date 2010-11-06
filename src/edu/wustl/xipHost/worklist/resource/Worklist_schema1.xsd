@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://edu.wustl.xipHost.worklist/" xmlns:tns="http://edu.wustl.xipHost.worklist/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="addWorklistEntry" type="tns:addWorklistEntry"/>
+
+  <xs:element name="addWorklistEntryResponse" type="tns:addWorklistEntryResponse"/>
+
+  <xs:element name="deleteWorkListEntry" type="tns:deleteWorkListEntry"/>
+
+  <xs:element name="deleteWorkListEntryResponse" type="tns:deleteWorkListEntryResponse"/>
+
+  <xs:element name="getNumberOfWorklistEntries" type="tns:getNumberOfWorklistEntries"/>
+
+  <xs:element name="getNumberOfWorklistEntriesResponse" type="tns:getNumberOfWorklistEntriesResponse"/>
+
+  <xs:element name="getWorklistEntries" type="tns:getWorklistEntries"/>
+
+  <xs:element name="getWorklistEntriesResponse" type="tns:getWorklistEntriesResponse"/>
+
+  <xs:element name="getWorklistEntry" type="tns:getWorklistEntry"/>
+
+  <xs:element name="getWorklistEntryResponse" type="tns:getWorklistEntryResponse"/>
+
+  <xs:element name="modifyWorklistEntry" type="tns:modifyWorklistEntry"/>
+
+  <xs:element name="modifyWorklistEntryResponse" type="tns:modifyWorklistEntryResponse"/>
+
+  <xs:complexType name="deleteWorkListEntry">
+    <xs:sequence>
+      <xs:element name="arg0" type="tns:worklistEntry" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="worklistEntry">
+    <xs:sequence>
+      <xs:element name="application" type="tns:application" minOccurs="0"/>
+      <xs:element name="studyInstanceUID" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="application">
+    <xs:sequence>
+      <xs:element name="concurrentInstances" type="xs:int"/>
+      <xs:element name="exePath" type="xs:string" minOccurs="0"/>
+      <xs:element name="iconFile" type="xs:string" minOccurs="0"/>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="iterationTarget" type="tns:iterationTarget" minOccurs="0"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="requiresGUI" type="xs:boolean"/>
+      <xs:element name="type" type="xs:string" minOccurs="0"/>
+      <xs:element name="vendor" type="xs:string" minOccurs="0"/>
+      <xs:element name="version" type="xs:string" minOccurs="0"/>
+      <xs:element name="wg23DataModelType" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteWorkListEntryResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="addWorklistEntry">
+    <xs:sequence>
+      <xs:element name="arg0" type="tns:worklistEntry" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="addWorklistEntryResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getWorklistEntries">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="getWorklistEntriesResponse">
+    <xs:sequence>
+      <xs:element name="return" type="tns:worklistEntry" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getNumberOfWorklistEntries">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="getNumberOfWorklistEntriesResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="modifyWorklistEntry">
+    <xs:sequence>
+      <xs:element name="arg0" type="tns:worklistEntry" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="modifyWorklistEntryResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getWorklistEntry">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getWorklistEntryResponse">
+    <xs:sequence>
+      <xs:element name="return" type="tns:worklistEntry" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="iterationTarget">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PATIENT"/>
+      <xs:enumeration value="STUDY"/>
+      <xs:enumeration value="SERIES"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+
