@@ -33,5 +33,4 @@ public interface ApplicationManager {
 	public File getTmpDir();
 	public void setOutputDir(File outDir);
 	public File getOutputDir();
-	public void setEntryAvailable(WorklistEntry entry);
 }

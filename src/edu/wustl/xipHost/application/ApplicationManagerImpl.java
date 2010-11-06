@@ -1,32 +1,20 @@
 /**
- * Copyright (c) 2008 Washington University in Saint Louis. All Rights Reserved.
+ * Copyright (c) 2010 Washington University in St. Louis. All Rights Reserved.
  */
 package edu.wustl.xipHost.application;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.BindException;
-import java.net.MalformedURLException;
-import java.net.ServerSocket;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import org.apache.log4j.Logger;
 import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.nema.dicom.wg23.State;
 
-import edu.wustl.xipHost.avt2ext.iterator.IterationTarget;
-
-public class ApplicationManagerImpl implements ApplicationManager{		
-	static List<Application> applications = new ArrayList<Application>();		
+public class ApplicationManagerImpl implements ApplicationManager {		
+	final static Logger logger = Logger.getLogger(ApplicationManagerImpl.class);
+	List<Application> applications = new ArrayList<Application>();		
 	Document document;
 	SAXBuilder saxBuilder = new SAXBuilder();
 	
@@ -41,22 +29,18 @@ public class ApplicationManagerImpl implements ApplicationManager{
 	public boolean addApplication(Application newApplication){				
 		try{
 			applications.add(newApplication);
+			logger.debug("Added application: " + newApplication.getId() + " " + newApplication.getName());
 			return true;
 		}catch(IllegalArgumentException e){
+			logger.error(e, e);
 			return false;
 		}		
 	}
-	
 	
 	public boolean modifyApplication(UUID applicationUUID, Application modifiedApplication){				
 		return true;		
 	}
 	
-	/**
-	 * Application can be removed when application's State is either null (not set yet) or EXIT
-	 * @param applicationUUID
-	 * @return
-	 */
 	public boolean removeApplication(UUID applicationUUID){
 		return false;
 	}		
@@ -108,5 +92,15 @@ public class ApplicationManagerImpl implements ApplicationManager{
 	}
 	public File getOutputDir(){
 		return outDir;
+	}
+
+	@Override
+	public boolean hasApplication(UUID uuid) {
+		for(Application app : applications){
+			if(app.getId().toString().equalsIgnoreCase(uuid.toString())){
+				return true;
+			}
+		}
+		return false;
 	}	
 }
