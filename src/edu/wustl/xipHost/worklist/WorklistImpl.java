@@ -3,15 +3,13 @@
  */
 package edu.wustl.xipHost.worklist;
 
-import java.util.HashMap;
+import java.io.File;
 import java.util.List;
-import java.util.Map;
 import javax.jws.WebService;
-import org.dcm4che2.data.Tag;
+import org.apache.log4j.Logger;
+import edu.wustl.xipHost.application.Application;
 import edu.wustl.xipHost.application.ApplicationManager;
 import edu.wustl.xipHost.application.ApplicationManagerFactory;
-import edu.wustl.xipHost.avt2ext.ADQueryTarget;
-import edu.wustl.xipHost.avt2ext.AVTQuery;
 
 /**
  * @author Jaroslaw Krych
@@ -22,21 +20,50 @@ import edu.wustl.xipHost.avt2ext.AVTQuery;
         portName="WorklistPort",
         targetNamespace = "http://edu.wustl.xipHost.worklist/",
         endpointInterface = "edu.wustl.xipHost.worklist.Worklist")
-public class WorklistImpl implements Worklist{
+public class WorklistImpl implements Worklist {
+	final static Logger logger = Logger.getLogger(WorklistImpl.class);
 	ApplicationManager appMgr = ApplicationManagerFactory.getInstance();
 	@Override
 	public boolean addWorklistEntry(WorklistEntry entry) {
-		
-		System.out.println(appMgr.hashCode());
-		//Application app = entry.getApplication();
-		//appMgr.addApplication(app);
-		//String studyInstanceUID = entry.getStudyInstanceUID();
+		String studyInstanceUID = entry.getStudyInstanceUID();
+		Application app = entry.getApplication();
+		if(studyInstanceUID == null || studyInstanceUID.isEmpty()){
+			logger.warn("Worklist recieved StudyInstanceUID: " + studyInstanceUID);
+			return false;
+		}
+		if(logger.isDebugEnabled()){
+			logger.debug("Worklist recieved StudyInstanceUID: " + studyInstanceUID);
+			if(app != null){
+				logger.debug("Worklist recieved application: ");
+				logger.debug("ID: " + app.getId());
+				logger.debug("Name: " + app.getName());
+				logger.debug("Type:" + app.getType());
+				logger.debug("Requires GUI: " + app.isRequiresGUI());
+				logger.debug("Iteration target: " + app.getIterationTarget().toString());
+				logger.debug("Allowable concurrent instances: " + app.getConcurrentInstances());
+				logger.debug("WG-23 data model type: " + app.getWg23DataModelType());
+			} else {
+				logger.debug("Worklist recieved application: " + app);
+			}
+		}
+		if(app != null && appMgr.hasApplication(app.getId()) == false){
+			appMgr.addApplication(app);
+		}
+		appMgr.setTmpDir(new File("C:/TmpXIP"));
+		appMgr.setOutputDir(new File("C:/OutXIP"));
+		File tmpDir = appMgr.getTmpDir();
+		File outDir = appMgr.getOutputDir();
+		app.setApplicationTmpDir(tmpDir);
+		app.setApplicationOutputDir(outDir);
+		app.setWorklistEntry(entry);
+		//appMgr.setEntryAvailable(entry);
+		/*
 		Map<Integer, Object> dicomCriteria = new HashMap<Integer, Object>();
 		Map<String, Object> aimCriteria = new HashMap<String, Object>();			
-		dicomCriteria.put(Tag.StudyInstanceUID, "1.2.840.113704.1.111.3124.1224538480.7");
+		dicomCriteria.put(Tag.StudyInstanceUID, studyInstanceUID);
 		AVTQuery avtQuery = new AVTQuery(dicomCriteria, aimCriteria, ADQueryTarget.STUDY, null, null);
-		avtQuery.run();
-		return false;
+		avtQuery.run();*/
+		return true;
 	}
 
 	@Override
@@ -68,16 +95,4 @@ public class WorklistImpl implements Worklist{
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	WorklistEntryListener listener;
-    public void addWorklistEntryListener(WorklistEntryListener l) {        
-        listener = l;          
-    }
-	void fireResultsAvailable(WorklistEntry entry){
-		
-		
-		//WorklistEntryEvent event = new WorklistEntryEvent(entry);         		
-        //listener.worklistEntryDataAvailable(event);
-	}
-
 }
