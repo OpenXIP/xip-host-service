@@ -1,4 +1,4 @@
-<project name="XIPHostService" default="init" basedir=".">
+<project name="XIPHostService" default="deploy" basedir=".">
    <description>
       XIP Host Reference Implementation, Washington University in Saint Louis, 2008
    </description>
@@ -11,17 +11,19 @@
    <property name="lib" location="lib" />
    <property name="lib.xip" location="lib/xip" />
    <property name="lib.AVT" location="lib/AVT" />
+	<property name="lib.jaxws" location="lib/jaxws" />
    <property name="warfile" value="xiphostservice"/>
-   
+
    <path id="sourcepath">      
       <pathelement location="${src}" />     
    </path>
-         
+	
+	
    <path id="classpath">
    		<!-- order matters! -->         
 	    <fileset dir="${lib.xip}" includes="**/*.jar" />      
-	    <fileset dir="${lib.AVT}" includes="**/*.jar" />     
-	    <fileset dir="${lib}" />
+	    <fileset dir="${lib.AVT}" includes="**/*.jar" /> 
+    	<fileset dir="${lib.jaxws}" includes="**/*.jar" /> 
    </path>
 
    <path id="run.classpath">
@@ -31,14 +33,14 @@
       </fileset>   	
    </path>  
 	
-	<target name="init">
+	<target name="init" depends="clean" description="creates build directory">
 		<!-- Create the build directory structure used by compile -->
 	    <mkdir dir="${build}" />
 	    <mkdir dir="${build.lib}" />
 	    <mkdir dir="${build.classes}" />     
 	</target>
 	
-	<target name="compile" depends="init" description="compile the source ">
+	<target name="compile" depends="init" description="compiles the source ">
       <!-- Compile the java code from ${src} into ${build.classes} -->
       <javac srcdir="${src}" destdir="${build.classes}" debug="on" classpathref="classpath"/>
    </target>  	
@@ -47,8 +49,11 @@
 		<copy todir="${build.lib}" overwrite="true">
 			<fileset dir="${lib.xip}" includes="*.jar" />
 			<fileset dir="${lib.AVT}" includes="*.jar" />     
-			<fileset dir="${lib}" includes="*.jar"/>  
+			<fileset dir="${lib.jaxws}" includes="*.jar" /> 
+			<fileset dir="${lib}" includes="*.jar"/> 
 		</copy>
+		<copy file="./connection.properties" todir="${build.classes}"/>
+		<copy file="./log4j.xml" todir="${build.classes}"/>
 		<war destfile="${warfile}.war" webxml="webcontent/WEB-INF/web.xml" update="true">
 			<lib dir="${build.lib}"/>
 			<classes dir="${build.classes}"/>
@@ -58,15 +63,15 @@
 		</war>
 	</target>
 		
-	<target name="copy">
-		<copy todir="/Users/Jarek/DevTools/apache-tomcat-6.0.24/webapps" overwrite="true">
+	<target name="copy" description= "copies war file to local Tomcat webapps directory">
+		<copy todir="C:\DevelopmentTools\apache-tomcat-6.0.29\webapps" overwrite="true">
 			<fileset dir=".">
 				<include name="*.war"/>
 			</fileset>
 		</copy>
 	</target>
 	
-	<target name="deploy">
+	<target name="deploy" description="creates war file and copies it to webapps dir">
 		<antcall target="create"/>
 		<antcall target="copy"/>
 	</target>
@@ -78,6 +83,5 @@
 	
 	<target name="unpack">
 			<unwar src="${warfile}.war" dest="${warfile}" />
-		</target>
-
+	</target>   
 </project>
