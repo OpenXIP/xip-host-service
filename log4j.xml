@@ -38,7 +38,7 @@
 		<param name="ConversionPattern" value="%d %-5p [%t] %C:%M:%L - %m%n"/>
   	</layout>  
   </appender>
-   <appender name="AVT_Appender" class="org.apache.log4j.DailyRollingFileAppender">
+  <appender name="AVT_Appender" class="org.apache.log4j.DailyRollingFileAppender">
 	<param name="File" value="${catalina.home}/logs/xipHostService/xiphost-avt.log"/>
 	<param name="DatePattern" value="'.'yyyy-ww"/>
 	<!-- param name="Threshold" value="DEBUG"/-->
@@ -47,35 +47,36 @@
 	</layout>
   </appender>
  
+  <appender name="Worklist_Appender" class="org.apache.log4j.DailyRollingFileAppender">
+	<param name="File" value="${catalina.home}/logs/xipHostService/xip-worklist.log"/>
+	<param name="DatePattern" value="'.'yyyy-ww"/>
+	<!-- param name="Threshold" value="DEBUG"/-->
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%d %-5p [%t] %C:%M:%L - %m%n"/>
+	</layout>
+  </appender>
+  
+  <logger name="edu.wustl.xipHost.worklist.WorklistImpl">
+	<appender-ref ref="Worklist_Appender"/>
+  </logger>
+ 
   <logger name="edu.wustl.xipHost.avt2ext.AVTQuery">
 	<appender-ref ref="AVT_Appender"/>
   </logger>
-   <logger name="edu.wustl.xipHost.avt2ext.AVTRetrieve">
+  <logger name="edu.wustl.xipHost.avt2ext.AVTRetrieve">
 	<appender-ref ref="AVT_Appender"/>
   </logger>
-  <logger name="edu.wustl.xipHost.avt2ext.AVTStore">
-	<appender-ref ref="AVT_Appender"/>
+  
+  <logger name="edu.wustl.xipHost.application.ApplicationManagerImpl">
+	<appender-ref ref="ApplicationOnHost_Appender"/>
   </logger>
-  <logger name="edu.wustl.xipHost.avt2ext.SearchCriteriaPanelAVT">
-	<appender-ref ref="AVT_Appender"/>
-  </logger>
-  <logger name="edu.wustl.xipHost.avt2ext.AVTUtil">
-	<appender-ref ref="AVT_Appender"/>
-  </logger>
-  <logger name="edu.wustl.xipHost.avt2ext.CreateIteratorTest">
-	<appender-ref ref="AVT_Appender"/>
-  </logger>
+  
+  
   <logger name="edu.wustl.xipHost.avt2ext.TargetIterator">
 	<appender-ref ref="AVT_Appender"/>
   </logger>
   
-  <logger name="edu.wustl.xipHost.hostControl.HostConfigurator">
-	<appender-ref ref="HostMain_Appender"/>
-  </logger>	
-  <logger name="edu.wustl.xipHost.hostControl.DataStore">
-	<appender-ref ref="HostMain_Appender"/>
-  </logger>	
-
+  
   <logger name="edu.wustl.xipHost.wg23.HostImpl">
 	<appender-ref ref="WG23Impl_Appender"/>
   </logger>		
@@ -83,13 +84,7 @@
   <logger name="edu.wustl.xipHost.application.Application">
 	<appender-ref ref="ApplicationOnHost_Appender"/>
   </logger>	
-  <logger name="edu.wustl.xipHost.gui.checkboxTree.SearchResultTree">
-	<appender-ref ref="HostMain_Appender"/>
-  </logger>	
-  <logger name="edu.wustl.xipHost.application.AddApplicationDialog">
-	<appender-ref ref="HostMain_Appender"/>
-  </logger>	
-  	
+  
   <root>
     <!-- level value="debug"/-->
     <appender-ref ref="stdout"/>   
