@@ -24,6 +24,12 @@ import org.nema.dicom.wg23.Status;
 import org.nema.dicom.wg23.Uid;
 import org.nema.dicom.wg23.Uuid;
 import edu.wustl.xipHost.application.Application;
+import edu.wustl.xipHost.application.ApplicationManager;
+import edu.wustl.xipHost.application.ApplicationManagerFactory;
+import edu.wustl.xipHost.worklist.WorklistEntry;
+import edu.wustl.xipHost.worklist.WorklistEntryEvent;
+import edu.wustl.xipHost.worklist.WorklistEntryListener;
+import edu.wustl.xipHost.worklist.WorklistFactory;
 
 
 /**
@@ -35,10 +41,11 @@ import edu.wustl.xipHost.application.Application;
         portName="HostPort",
         targetNamespace = "http://wg23.dicom.nema.org/",
         endpointInterface = "org.nema.dicom.wg23.Host")
-public class HostImpl implements Host{	
+public class HostImpl implements Host {	
 	final static Logger logger = Logger.getLogger(HostImpl.class);
 	Application app;
-	List<ObjectLocator> objLocs;	
+	List<ObjectLocator> objLocs;
+	ApplicationManager appMgr = ApplicationManagerFactory.getInstance();
 	
 	public HostImpl(Application application){
 		app = application;		
@@ -52,6 +59,8 @@ public class HostImpl implements Host{
 		Uid uid = new Uid();
 		UUID id = UUID.randomUUID();
 		uid.setUid(id.toString());
+		uid.setUid(id.toString());
+		System.out.println(appMgr.hashCode());
 		return uid;
 	}
 
@@ -68,9 +77,7 @@ public class HostImpl implements Host{
 	public ArrayOfObjectLocator getDataAsFile(ArrayOfUUID uuids, boolean includeBulkData){ 			
 		
 		ArrayOfObjectLocator arrayObjLoc = new ArrayOfObjectLocator();
-		List<Uuid> listUUIDs = uuids.getUuid();
-		objLocs = app.retrieveAndGetLocators(listUUIDs);
-		arrayObjLoc.getObjectLocator().addAll(objLocs);				
+		//TODO				
 		return arrayObjLoc;
 	}
 
@@ -81,21 +88,23 @@ public class HostImpl implements Host{
 
 	public String getOutputDir() {
 		String appOutDir = null;		
+		/*
 		try {
 			appOutDir = app.getApplicationOutputDir().toURI().toURL().toExternalForm();
 		} catch (MalformedURLException e) {
 
-		}		
+		}	*/	
 		return appOutDir;
 	}
 
 	public String getTmpDir() {
 		String appTmpDir = null;;
+		/*
 		try {
 			appTmpDir = app.getApplicationTmpDir().toURI().toURL().toExternalForm();
 		} catch (MalformedURLException e) {
 			
-		}		
+		}*/		
 		return appTmpDir;				
 	}
 
@@ -132,10 +141,12 @@ public class HostImpl implements Host{
 	 * 
 	 */
 	public void changeState(State state) throws StateChangeException  {		
+		/*
 		State currState = app.getState();		
 		if(state == null){throw new StateChangeException("Requested state: " + state + ", current app state: " + currState);}
         switch (State.valueOf(state.toString())) {
-            case IDLE:  
+           
+        	case IDLE:  
             	if(currState == null || currState.equals(State.COMPLETED) 
             			|| currState.equals(State.CANCELED) || currState.equals(State.EXIT)){            		
             		app.setState(state);            		          		
@@ -181,7 +192,7 @@ public class HostImpl implements Host{
             	break;   
             default: 
             	throw new StateChangeException("Requested state: " + state.toString() + ", current app state: " + currState);            	
-        }
+        }	*/
 	}
 	
 

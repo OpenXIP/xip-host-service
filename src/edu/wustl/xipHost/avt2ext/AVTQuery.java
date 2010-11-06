@@ -201,7 +201,7 @@ public class AVTQuery implements Runnable, Query{
 		}
 		long time2 = System.currentTimeMillis();
 		logger.info("AVT query finished in: " + (time2 - time1) + " ms");
-		fireResultsAvailable(result);
+		//fireResultsAvailable(result);
 	}	
 	
 	AVTListener listener;

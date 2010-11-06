@@ -229,12 +229,7 @@ public class HostConfigurator {
 		//Host can terminate only if no applications are running (verify applications are not running)
 		List<Application> applications = appMgr.getApplications();
 		for(Application app : applications){			
-			State state = app.getState();			
-			if(state != null && state.equals(State.EXIT) == false ){
-				if(app.shutDown() == false){
-					return;
-				}
-			}
+			
 		}		
 		logger.info("Shutting down XIP Host.");
 		//Store Host configuration parameters

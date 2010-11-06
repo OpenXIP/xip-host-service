@@ -26,6 +26,6 @@ public class NotificationRunner implements Runnable {
 	
 	@Override
 	public void run() {
-		application.getClientToApplication().notifyDataAvailable(availableData, true);
+		//application.getClientToApplication().notifyDataAvailable(availableData, true);
 	}
 }

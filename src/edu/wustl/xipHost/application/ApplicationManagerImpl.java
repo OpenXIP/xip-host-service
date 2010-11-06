@@ -30,117 +30,12 @@ public class ApplicationManagerImpl implements ApplicationManager{
 	Document document;
 	SAXBuilder saxBuilder = new SAXBuilder();
 	
-	public boolean loadApplications (File xipAppFile) throws JDOMException, IOException {				
-		if(xipAppFile == null || !xipAppFile.exists()){
-			return false;
-		}else{					
-				document = saxBuilder.build(xipAppFile);
-				Element root = document.getRootElement();
-				String name = new String();
-				String exePath = new String();
-				String vendor = new String();
-				String version = new String();
-				String iconFile = new String();
-				String type = new String();
-				boolean requiresGUI;
-				String wg23DataModelType = new String();
-				int concurrentInstances;
-				IterationTarget iterationTarget = null;
-		        List appList = root.getChildren("application");		        
-		        Iterator iter = appList.iterator();
-		        int i= 0;
-		        while(iter.hasNext()){                                                               
-		        	Element application = (Element)iter.next();
-		        	name = application.getChildText("name");
-		        	exePath = new File(application.getChildText("exePath")).getCanonicalPath();		        	
-		        	vendor = application.getChildText("vendor");
-		        	version = application.getChildText("version");
-		        	iconFile = application.getChildText("iconFile");
-		        	type = application.getChildText("type");
-		        	requiresGUI = Boolean.getBoolean(application.getChildText("requiresGUI"));
-		        	wg23DataModelType = application.getChildText("wg23DataModelType");
-		        	concurrentInstances = Integer.parseInt(application.getChildText("concurrentInstances"));
-		        	String strTarget = application.getChildText("iterationTarget");
-		        	iterationTarget = IterationTarget.valueOf(strTarget);
-		        	try{		        				        				        		
-		        		Application app = new Application(name, new File(exePath), vendor, version, new File(iconFile),
-		        				type, requiresGUI, wg23DataModelType, concurrentInstances, iterationTarget);		        			    				
-			    		addApplication(app);		        	
-			        	i++;
-		        	}catch (IllegalArgumentException e){
-		        		System.out.println("Unable to load: " + name + " " + exePath + " - invalid parameters.");
-		        	}		        			        			        	
-		        }   			
-			return true;
-		}				                                   		       
+	public boolean loadApplications (File xipAppFile) {					
+		return true;			                                   		       
     }
 		
 	public boolean storeApplications(List<Application> applications, File xipAppFile){      	
-		if(applications == null || xipAppFile == null){return false;}
-		Element root = new Element("applications");						
-		for(int i = 0; i < getNumberOfApplications(); i++){						
-			if(applications.get(i).getDoSave()){
-				try {
-					Element application = new Element("application");                
-					Element name = new Element("name");
-			        Element exePath = new Element("exePath");
-			        Element vendor = new Element("vendor");
-			        Element version = new Element("version");
-			        Element iconFile = new Element("iconFile");
-			        Element type = new Element("type");
-			        Element requiresGUI = new Element("requiresGUI");
-			        Element wg23DataModelType = new Element("wg23DataModelType");
-			        Element concurrentInstances = new Element("concurrentInstances");
-			        Element iterationTarget = new Element("iterationTarget");
-					root.addContent(application);        	                	                                        		        
-				        application.addContent(name);
-				        	name.setText(applications.get(i).getName());
-				        application.addContent(exePath);			            
-							exePath.setText(applications.get(i).getExePath().getCanonicalPath());						
-				        application.addContent(vendor);
-				        	vendor.setText(applications.get(i).getVendor());
-				        application.addContent(version);
-				        	version.setText(applications.get(i).getVersion());	       	
-			        	application.addContent(iconFile);
-			        	File icon = applications.get(i).getIconFile();			       
-			        	if(icon != null){
-			        		iconFile.setText(applications.get(i).getIconFile().getCanonicalPath());
-			        	}else {
-			        		iconFile.setText("");
-			        	}
-			        	application.addContent(type);
-			        		type.setText(applications.get(i).getType());
-			        	application.addContent(requiresGUI);
-			        		requiresGUI.setText(new Boolean(applications.get(i).requiresGUI()).toString());
-			        	application.addContent(wg23DataModelType);
-			        		wg23DataModelType.setText(applications.get(i).getWG23DataModelType());
-			        	application.addContent(concurrentInstances);
-			        		concurrentInstances.setText(String.valueOf(applications.get(i).getConcurrentInstances()));
-			        	application.addContent(iterationTarget);
-			        		iterationTarget.setText(applications.get(i).getIterationTarget().toString());
-				} catch (MalformedURLException e) {				
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}			
-		}		                	
-    	Document document = new Document(root);
-    	FileOutputStream outStream;
-		try {
-			outStream = new FileOutputStream(xipAppFile);
-			XMLOutputter outToXMLFile = new XMLOutputter();
-			outToXMLFile.setFormat(Format.getPrettyFormat());
-	    	outToXMLFile.output(document, outStream);
-	    	outStream.flush();
-	    	outStream.close();
-	    	return true;
-		} catch (FileNotFoundException e) {
-			return false;
-		} catch (IOException e) {
-			return false;
-		}    	                    
+		return true; 	                    
 	}
 				
 	public boolean addApplication(Application newApplication){				
@@ -152,31 +47,8 @@ public class ApplicationManagerImpl implements ApplicationManager{
 		}		
 	}
 	
-	/**
-	 * Application can be modified when application's State is either null (not set yet) or EXIT
-	 * @param applicationUUID
-	 * @param modifiedApplication
-	 * @return
-	 */
+	
 	public boolean modifyApplication(UUID applicationUUID, Application modifiedApplication){				
-		Application app = getApplication(applicationUUID);
-		if(app == null){
-			return false;
-		}else if(app.getState() != null){
-			if(!app.getState().equals(State.EXIT) || !app.getState().equals(null)){
-				return false;
-			}
-		}
-		String newName = modifiedApplication.getName();
-		File newExePath = modifiedApplication.getExePath();
-		String newVendor = modifiedApplication.getVendor();
-		String newVersion = modifiedApplication.getVersion();
-		File newIconFile = modifiedApplication.getIconFile();
-		app.setName(newName);
-		app.setExePath(newExePath);
-		app.setVendor(newVendor);
-		app.setVersion(newVersion);
-		app.setIconFile(newIconFile);
 		return true;		
 	}
 	
@@ -186,36 +58,15 @@ public class ApplicationManagerImpl implements ApplicationManager{
 	 * @return
 	 */
 	public boolean removeApplication(UUID applicationUUID){
-		for(int i = 0; i < getNumberOfApplications(); i++){
-			if(applications.get(i).getID().equals(applicationUUID)){								
-				Application app = applications.get(i);
-				if(app.getState() != null && !app.getState().equals(State.EXIT)){
-					return false;
-				}else{
-					applications.remove(i);
-					return true;
-				}				
-			}
-		}
 		return false;
 	}		
 		
 	public Application getApplication(UUID uuid){
 		Application app = null;
-		for(int i = 0; i < applications.size(); i++){
-			if(applications.get(i).getID().equals(uuid)){
-				app = applications.get(i);
-			}
-		}		
+				
 		return app;
 	}		
-	/**
-	 * Method was intended for use with worklist, which used applications' names.
-	 * Worklist enties do not contain applications UUID. UUIDs are asigned dynamically
-	 * when applications are loaded or added.
-	 * @param applicationName
-	 * @return
-	 */
+	
 	public Application getApplication(String applicationName){
 		Application app = null;
 		for(int i = 0; i < applications.size(); i++){
@@ -236,53 +87,12 @@ public class ApplicationManagerImpl implements ApplicationManager{
 		
     
 	public URL generateNewApplicationServiceURL(){
-		//"http://localhost:8060/ApplicationInterface?wsdl"
-		int portNum = 8060;
-		String str1 = "http://localhost:";
-		//String str2 = "/ApplicationInterface?wsdl";		
-		String str2 = "/ApplicationInterface";
-		while(checkPort(portNum) == false){
-			portNum++;			 			
-		}
-		URL url = null;
-		try {
-			url = new URL(str1 + portNum + str2);
-		} catch (MalformedURLException e) {
-			return url;
-		}
-		return url;
+		return null;
 	}	
 	
 	public URL generateNewHostServiceURL(){
-		int portNum = 8090;
-		String str1 = "http://localhost:";
-		//String str2 = "/HostInterface?wsdl";		
-		String str2 = "/HostInterface";
-		while(checkPort(portNum) == false){
-			portNum++;			 			
-		}
-		URL url = null;
-		try {
-			url = new URL(str1 + portNum + str2);
-		} catch (MalformedURLException e) {
-			return url;
-		}
-		return url;
+		return null;
 	}	
-	
-	//TODO: modify to work with Windows Vista
-	public boolean checkPort(int port) {
-		try {
-			ServerSocket sock = new ServerSocket(port);
-			sock.close();			
-			return true;
-		}catch(BindException b) {			
-			return false;
-		}
-		catch (IOException e) {
-			return false;
-		}		
-	} 
 	
 	File tmpDir;
 	public void setTmpDir(File tmpDir){
