@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.UUID;
 import org.jdom.JDOMException;
 
+import edu.wustl.xipHost.worklist.WorklistEntry;
+
 /**
  * @author Jaroslaw Krych
  *
@@ -21,7 +23,8 @@ public interface ApplicationManager {
 	public boolean modifyApplication(UUID applicationUUID, Application modifiedApplication);
 	public boolean removeApplication(UUID applicationUUID);	
 	public Application getApplication(UUID uuid);
-	public Application getApplication(String applicationName);	
+	public Application getApplication(String applicationName);
+	public boolean hasApplication(UUID uuid);
 	public List<Application> getApplications();	
 	public int getNumberOfApplications();
 	public URL generateNewApplicationServiceURL();	
@@ -30,4 +33,5 @@ public interface ApplicationManager {
 	public File getTmpDir();
 	public void setOutputDir(File outDir);
 	public File getOutputDir();
+	public void setEntryAvailable(WorklistEntry entry);
 }
