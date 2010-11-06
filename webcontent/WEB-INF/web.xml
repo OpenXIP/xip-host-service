@@ -15,17 +15,27 @@
 		</listener-class>
 	</listener>
 	
-	<servlet>
+	<servlet id="1">
 		<servlet-name>xiphostservice</servlet-name>
 		<servlet-class>
 			com.sun.xml.ws.transport.http.servlet.WSServlet
 		</servlet-class>
 	</servlet>
-	
 	<servlet-mapping>
 		<servlet-name>xiphostservice</servlet-name>
 		<url-pattern>/host</url-pattern>
 	</servlet-mapping>
+	<servlet id="2">
+		<servlet-name>worklistservice</servlet-name>
+		<servlet-class>
+			com.sun.xml.ws.transport.http.servlet.WSServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>worklistservice</servlet-name>
+		<url-pattern>/worklist</url-pattern>
+	</servlet-mapping>
+	
 	<session-config>
 		<session-timeout>35</session-timeout> <!-- 35 minutes -->
 	</session-config>
