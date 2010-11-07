@@ -4,6 +4,7 @@
 package edu.wustl.xipHost.application;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	SAXBuilder saxBuilder = new SAXBuilder();
 	
 	public boolean loadApplications (File xipAppFile) {					
+		//TODO
 		return true;			                                   		       
     }
 		
 	public boolean storeApplications(List<Application> applications, File xipAppFile){      	
+		//TODO
 		return true; 	                    
 	}
 				
@@ -38,16 +41,18 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	}
 	
 	public boolean modifyApplication(UUID applicationUUID, Application modifiedApplication){				
+		//TODO
 		return true;		
 	}
 	
 	public boolean removeApplication(UUID applicationUUID){
+		//TODO
 		return false;
 	}		
 		
 	public Application getApplication(UUID uuid){
-		Application app = null;
-				
+		//TODO
+		Application app = null;	
 		return app;
 	}		
 	
@@ -71,10 +76,22 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		
     
 	public URL generateNewApplicationServiceURL(){
-		return null;
+		//"http://localhost:8060/ApplicationInterface?wsdl"
+		int portNum = 8060;
+		String str1 = "http://localhost:";
+		//String str2 = "/ApplicationInterface?wsdl";		
+		String str2 = "/ApplicationInterface";
+		URL url = null;
+		try {
+			url = new URL(str1 + portNum + str2);
+		} catch (MalformedURLException e) {
+			return url;
+		}
+		return url;
 	}	
 	
 	public URL generateNewHostServiceURL(){
+		//TODO
 		return null;
 	}	
 	

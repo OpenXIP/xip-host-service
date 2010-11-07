@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008 Washington University in Saint Louis. All Rights Reserved.
+ * Copyright (c) 2010 Washington University in St. Louis. All Rights Reserved.
  */
 package edu.wustl.xipHost.application;
 
@@ -9,8 +9,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 import org.jdom.JDOMException;
-
-import edu.wustl.xipHost.worklist.WorklistEntry;
 
 /**
  * @author Jaroslaw Krych
