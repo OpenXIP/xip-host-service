@@ -3,11 +3,8 @@
  */
 package edu.wustl.xipHost.wg23;
 
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javax.jws.WebService;
 import org.apache.log4j.Logger;
 import org.nema.dicom.wg23.ArrayOfObjectLocator;
@@ -22,14 +19,9 @@ import org.nema.dicom.wg23.Rectangle;
 import org.nema.dicom.wg23.State;
 import org.nema.dicom.wg23.Status;
 import org.nema.dicom.wg23.Uid;
-import org.nema.dicom.wg23.Uuid;
 import edu.wustl.xipHost.application.Application;
 import edu.wustl.xipHost.application.ApplicationManager;
 import edu.wustl.xipHost.application.ApplicationManagerFactory;
-import edu.wustl.xipHost.worklist.WorklistEntry;
-import edu.wustl.xipHost.worklist.WorklistEntryEvent;
-import edu.wustl.xipHost.worklist.WorklistEntryListener;
-import edu.wustl.xipHost.worklist.WorklistFactory;
 
 
 /**
@@ -48,7 +40,7 @@ public class HostImpl implements Host {
 	ApplicationManager appMgr = ApplicationManagerFactory.getInstance();
 	
 	public HostImpl(Application application){
-		app = application;		
+			
 	}
 	
 	public HostImpl(){
@@ -70,8 +62,8 @@ public class HostImpl implements Host {
 	}
 
 	public Rectangle getAvailableScreen(Rectangle appPreferredScreen) {		
-		//TODO
-		return null;
+		Rectangle size = appMgr.getApplications().get(0).getApplicationPreferredSize();		
+		return size;
 	}
 
 	public ArrayOfObjectLocator getDataAsFile(ArrayOfUUID uuids, boolean includeBulkData){ 			
@@ -114,14 +106,12 @@ public class HostImpl implements Host {
 	}
 
 
-	ExecutorService stateExeService = Executors.newFixedThreadPool(1);
 	public void notifyStateChanged(State newState) {		
-		//logger.debug("Requested state change to " + newState.toString() + " of \"" + app.getName() + "\"");
+		logger.debug("Requested state change to " + newState.toString() + " of \"" + app.getName() + "\"");
 		try {
 			changeState(newState);					
 		} catch (StateChangeException e) {			
-			//TODO what to do when state cannot be changed
-			e.printStackTrace();
+			logger.error(e, e);
 		}
 	}
 
@@ -141,12 +131,10 @@ public class HostImpl implements Host {
 	 * 
 	 */
 	public void changeState(State state) throws StateChangeException  {		
-		/*
 		State currState = app.getState();		
 		if(state == null){throw new StateChangeException("Requested state: " + state + ", current app state: " + currState);}
         switch (State.valueOf(state.toString())) {
-           
-        	case IDLE:  
+            case IDLE:  
             	if(currState == null || currState.equals(State.COMPLETED) 
             			|| currState.equals(State.CANCELED) || currState.equals(State.EXIT)){            		
             		app.setState(state);            		          		
@@ -192,7 +180,7 @@ public class HostImpl implements Host {
             	break;   
             default: 
             	throw new StateChangeException("Requested state: " + state.toString() + ", current app state: " + currState);            	
-        }	*/
+        }
 	}
 	
 
