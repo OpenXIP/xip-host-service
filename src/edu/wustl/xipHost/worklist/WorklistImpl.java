@@ -4,6 +4,8 @@
 package edu.wustl.xipHost.worklist;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import javax.jws.WebService;
 import org.apache.log4j.Logger;
@@ -55,14 +57,15 @@ public class WorklistImpl implements Worklist {
 		File outDir = appMgr.getOutputDir();
 		app.setApplicationTmpDir(tmpDir);
 		app.setApplicationOutputDir(outDir);
+		URL hostServiceURL = null;
+		try {
+			hostServiceURL = new URL("http://localhost:8080/xiphostservice/host");
+		} catch (MalformedURLException e) {
+			logger.error(e, e);
+		}
+		URL appServiceURL = appMgr.generateNewApplicationServiceURL();
+		app.launch(hostServiceURL, appServiceURL);
 		app.setWorklistEntry(entry);
-		//appMgr.setEntryAvailable(entry);
-		/*
-		Map<Integer, Object> dicomCriteria = new HashMap<Integer, Object>();
-		Map<String, Object> aimCriteria = new HashMap<String, Object>();			
-		dicomCriteria.put(Tag.StudyInstanceUID, studyInstanceUID);
-		AVTQuery avtQuery = new AVTQuery(dicomCriteria, aimCriteria, ADQueryTarget.STUDY, null, null);
-		avtQuery.run();*/
 		return true;
 	}
 
