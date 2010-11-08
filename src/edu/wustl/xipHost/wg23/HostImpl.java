@@ -3,6 +3,7 @@
  */
 package edu.wustl.xipHost.wg23;
 
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.UUID;
 import javax.jws.WebService;
@@ -19,6 +20,8 @@ import org.nema.dicom.wg23.Rectangle;
 import org.nema.dicom.wg23.State;
 import org.nema.dicom.wg23.Status;
 import org.nema.dicom.wg23.Uid;
+import org.nema.dicom.wg23.Uuid;
+
 import edu.wustl.xipHost.application.Application;
 import edu.wustl.xipHost.application.ApplicationManager;
 import edu.wustl.xipHost.application.ApplicationManagerFactory;
@@ -67,9 +70,10 @@ public class HostImpl implements Host {
 	}
 
 	public ArrayOfObjectLocator getDataAsFile(ArrayOfUUID uuids, boolean includeBulkData){ 			
-		
 		ArrayOfObjectLocator arrayObjLoc = new ArrayOfObjectLocator();
-		//TODO				
+		List<Uuid> listUUIDs = uuids.getUuid();
+		objLocs = app.retrieveAndGetLocators(listUUIDs);
+		arrayObjLoc.getObjectLocator().addAll(objLocs);				
 		return arrayObjLoc;
 	}
 
@@ -80,24 +84,22 @@ public class HostImpl implements Host {
 
 	public String getOutputDir() {
 		String appOutDir = null;		
-		/*
 		try {
 			appOutDir = app.getApplicationOutputDir().toURI().toURL().toExternalForm();
 		} catch (MalformedURLException e) {
-
-		}	*/	
+			logger.error(e, e);
+		}		
 		return appOutDir;
 	}
 
 	public String getTmpDir() {
 		String appTmpDir = null;;
-		/*
 		try {
 			appTmpDir = app.getApplicationTmpDir().toURI().toURL().toExternalForm();
 		} catch (MalformedURLException e) {
-			
-		}*/		
-		return appTmpDir;				
+			logger.error(e, e);
+		}		
+		return appTmpDir;					
 	}
 
 	public boolean notifyDataAvailable(AvailableData availableData, boolean lastData) {					
@@ -107,7 +109,11 @@ public class HostImpl implements Host {
 
 
 	public void notifyStateChanged(State newState) {		
-		logger.debug("Requested state change to " + newState.toString() + " of \"" + app.getName() + "\"");
+		//Set application when first notified about state change to IDLE
+		if(newState.equals(State.IDLE)){
+			app = appMgr.getApplications().get(0);
+		}
+		logger.debug("Requested state change to " + newState.toString() + " of \"" + appMgr.getApplications().get(0).getName() + "\"");
 		try {
 			changeState(newState);					
 		} catch (StateChangeException e) {			
