@@ -23,6 +23,6 @@ public class StateExecutor implements Runnable{
 	}
 	
 	public void run() {
-		//application.getClientToApplication().setState(state);		
+		application.getClientToApplication().setState(state);		
 	}
 }
