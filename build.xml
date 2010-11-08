@@ -9,9 +9,9 @@
    <property name="build.lib" location="${build}/lib" />
    <property name="build.classes" location="${build}/classes" />
    <property name="lib" location="lib" />
-   <property name="lib.xip" location="lib/xip" />
-   <property name="lib.AVT" location="lib/AVT" />
-   <property name="lib.jaxws" location="lib/jaxws" />
+   <property name="lib.xip" location="${lib}/xip" />
+   <property name="lib.AVT" location="${lib}/AVT" />
+   <property name="lib.jaxws" location="${lib}/jaxws" />
    <property name="warfile" value="xiphostservice"/>
    
 
