@@ -5,6 +5,7 @@ package edu.wustl.xipHost.application;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.UUID;
@@ -31,4 +32,5 @@ public interface ApplicationManager {
 	public File getTmpDir();
 	public void setOutputDir(File outDir);
 	public File getOutputDir();
+	public boolean loadHostConfigParameters(InputStream inputStream);
 }

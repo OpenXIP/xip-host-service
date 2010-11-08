@@ -4,6 +4,8 @@
 package edu.wustl.xipHost.application;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,13 +13,13 @@ import java.util.List;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 public class ApplicationManagerImpl implements ApplicationManager {		
 	final static Logger logger = Logger.getLogger(ApplicationManagerImpl.class);
 	List<Application> applications = new ArrayList<Application>();		
-	Document document;
-	SAXBuilder saxBuilder = new SAXBuilder();
 	
 	public boolean loadApplications (File xipAppFile) {					
 		//TODO
@@ -119,5 +121,54 @@ public class ApplicationManagerImpl implements ApplicationManager {
 			}
 		}
 		return false;
-	}	
+	}
+	
+	SAXBuilder saxBuilder = new SAXBuilder();
+	Document documentHostConfig;
+	Element root;
+	String parentOfTmpDir;
+	String parentOfOutDir;	
+	public boolean loadHostConfigParameters (InputStream inputStream) {								
+		if(inputStream == null){
+			return false;
+		}else{
+			try{				
+				documentHostConfig = saxBuilder.build(inputStream);
+				root = documentHostConfig.getRootElement();				
+				//path for the parent of TMP directory
+				if(root.getChild("tmpDir") == null){
+					parentOfTmpDir = "";
+				}else if(root.getChild("tmpDir").getValue().trim().isEmpty() ||
+						new File(root.getChild("tmpDir").getValue()).exists() == false){
+					parentOfTmpDir = "";
+					tmpDir = new File(parentOfTmpDir);
+				}else{					
+					parentOfTmpDir = root.getChild("tmpDir").getValue();
+					tmpDir = new File(parentOfTmpDir);
+				}
+				if(root.getChild("outputDir") == null){
+					parentOfOutDir = "";
+					outDir = new File(parentOfOutDir);
+				}else if(root.getChild("outputDir").getValue().trim().isEmpty() ||
+						new File(root.getChild("outputDir").getValue()).exists() == false){
+					parentOfOutDir = "";
+					outDir = new File(parentOfOutDir);
+				}else{
+					//path for the parent of output directory. 
+					//parentOfOutDir used to store data produced by the xip application													                                                                       		        							
+					parentOfOutDir = root.getChild("outputDir").getValue();	
+					outDir = new File(parentOfOutDir);
+				}       	        	
+		    } catch (JDOMException e) {				
+				logger.error(e, e);
+		    	return false;
+			} catch (IOException e) {
+				logger.error(e, e);
+				return false;
+			}			
+		}
+		logger.debug("Tmp dir: " + tmpDir.getAbsolutePath());
+		logger.debug("Out dir: " + outDir.getAbsolutePath());
+		return true;
+    }
 }
