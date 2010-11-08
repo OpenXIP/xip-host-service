@@ -4,6 +4,7 @@
 package edu.wustl.xipHost.worklist;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -55,10 +56,11 @@ public class WorklistImpl implements Worklist {
 				if(app != null && appMgr.hasApplication(app.getId()) == false){
 					appMgr.addApplication(app);
 				}
-				appMgr.setTmpDir(new File("C:/TmpXIP"));
-				appMgr.setOutputDir(new File("C:/OutXIP"));
+				InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("xipConfig.xml");
+				appMgr.loadHostConfigParameters(inputStream);
 				File tmpDir = appMgr.getTmpDir();
 				File outDir = appMgr.getOutputDir();
+				logger.debug("Application tmp dir: " + tmpDir.getAbsolutePath());
 				app.setApplicationTmpDir(tmpDir);
 				app.setApplicationOutputDir(outDir);
 				URL hostServiceURL = null;
