@@ -196,6 +196,10 @@ public class Application implements AVTListener, TargetIteratorListener, AVTRetr
 	
 	URL hostServiceURL;
 	URL appServiceURL;
+	public URL getApplicationServiceURL(){
+		return appServiceURL;
+	}
+	
 	public void launch(URL hostServiceURL, URL appServiceURL){
 		this.hostServiceURL = hostServiceURL;
 		this.appServiceURL = appServiceURL;	
