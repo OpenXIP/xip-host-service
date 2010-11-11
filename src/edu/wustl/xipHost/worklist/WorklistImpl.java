@@ -53,16 +53,23 @@ public class WorklistImpl implements Worklist {
 						logger.debug("Worklist recieved application: " + app);
 					}
 				}
-				if(app != null && appMgr.hasApplication(app.getId()) == false){
-					appMgr.addApplication(app);
+				logger.debug("Applications number: " + appMgr.getNumberOfApplications());
+				logger.debug("Contains: " + appMgr.hasApplication(app.getId()));
+				boolean isAppRegistered = false;
+				if(app != null && appMgr.hasApplication(app.getId()) == true){
+					isAppRegistered = true;
 				}
-				InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("xipConfig.xml");
-				appMgr.loadHostConfigParameters(inputStream);
-				File tmpDir = appMgr.getTmpDir();
-				File outDir = appMgr.getOutputDir();
-				logger.debug("Application tmp dir: " + tmpDir.getAbsolutePath());
-				app.setApplicationTmpDir(tmpDir);
-				app.setApplicationOutputDir(outDir);
+				if(isAppRegistered == false){
+					appMgr.addApplication(app);
+					InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("xipConfig.xml");
+					appMgr.loadHostConfigParameters(inputStream);
+					File tmpDir = appMgr.getTmpDir();
+					File outDir = appMgr.getOutputDir();
+					logger.debug("Application tmp dir: " + tmpDir.getAbsolutePath());
+					app.setApplicationTmpDir(tmpDir);
+					app.setApplicationOutputDir(outDir);
+					
+				}
 				URL hostServiceURL = null;
 				try {
 					hostServiceURL = new URL("http://localhost:8080/xiphostservice/host");
@@ -70,11 +77,14 @@ public class WorklistImpl implements Worklist {
 					logger.error(e, e);
 				}
 				URL appServiceURL = appMgr.generateNewApplicationServiceURL();
-				
-				
-				app.launch(hostServiceURL, appServiceURL);
-				app.setWorklistEntry(entry);
-				
+				if(isAppRegistered == false){
+					app.launch(hostServiceURL, appServiceURL);
+					app.setWorklistEntry(entry);
+				} else {
+					Application registeredApp = appMgr.getApplication(app.getId());
+					registeredApp.launch(hostServiceURL, appServiceURL);
+					registeredApp.setWorklistEntry(entry);
+				}
 			}
 		};
 		Thread t = new Thread(runner);
