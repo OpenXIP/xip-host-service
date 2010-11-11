@@ -53,8 +53,12 @@ public class ApplicationManagerImpl implements ApplicationManager {
 	}		
 		
 	public Application getApplication(UUID uuid){
-		//TODO
-		Application app = null;	
+		Application app = null;
+		for(int i = 0; i < applications.size(); i++){
+			if(applications.get(i).getId().equals(uuid)){
+				app = applications.get(i);
+			}
+		}		
 		return app;
 	}		
 	
@@ -76,13 +80,11 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		return applications.size();
 	}	
 		
-    
+	int portNum = 8059;
 	public URL generateNewApplicationServiceURL(){
-		//"http://localhost:8060/ApplicationInterface?wsdl"
-		int portNum = 8060;
-		String str1 = "http://localhost:";
-		//String str2 = "/ApplicationInterface?wsdl";		
+		String str1 = "http://localhost:";		
 		String str2 = "/ApplicationInterface";
+		portNum++;			 			
 		URL url = null;
 		try {
 			url = new URL(str1 + portNum + str2);
