@@ -112,6 +112,7 @@ public class HostImpl implements Host {
 		//Set application when first notified about state change to IDLE
 		if(newState.equals(State.IDLE)){
 			app = appMgr.getApplications().get(0);
+			logger.debug("URL: " + app.getApplicationServiceURL().toExternalForm().toString());
 		}
 		logger.debug("Requested state change to " + newState.toString() + " of \"" + appMgr.getApplications().get(0).getName() + "\"");
 		try {
