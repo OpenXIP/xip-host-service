@@ -63,7 +63,7 @@
   <logger name="edu.wustl.xipHost.avt2ext.AVTQuery">
 	<appender-ref ref="AVT_Appender"/>
   </logger>
-  <logger name="edu.wustl.xipHost.avt2ext.AVTRetrieve">
+  <logger name="edu.wustl.xipHost.avt2ext.AVTRetrieve2">
 	<appender-ref ref="AVT_Appender"/>
   </logger>
   
