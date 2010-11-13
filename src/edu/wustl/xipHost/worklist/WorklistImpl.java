@@ -68,7 +68,6 @@ public class WorklistImpl implements Worklist {
 					logger.debug("Application tmp dir: " + tmpDir.getAbsolutePath());
 					app.setApplicationTmpDir(tmpDir);
 					app.setApplicationOutputDir(outDir);
-					
 				}
 				URL hostServiceURL = null;
 				try {
@@ -80,10 +79,12 @@ public class WorklistImpl implements Worklist {
 				if(isAppRegistered == false){
 					app.launch(hostServiceURL, appServiceURL);
 					app.setWorklistEntry(entry);
+					appMgr.setDefaultApplication(app);
 				} else {
 					Application registeredApp = appMgr.getApplication(app.getId());
 					registeredApp.launch(hostServiceURL, appServiceURL);
 					registeredApp.setWorklistEntry(entry);
+					appMgr.setDefaultApplication(registeredApp);
 				}
 			}
 		};
