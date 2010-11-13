@@ -12,6 +12,8 @@
    <property name="lib.xip" location="${lib}/xip" />
    <property name="lib.AVT" location="${lib}/AVT" />
    <property name="lib.jaxws" location="${lib}/jaxws" />
+   <property name="lib.NBIA" location="${lib}/NBIA" />
+   <property name="lib.NBIAext" location="${lib}/NBIAext" />	
    <property name="warfile" value="xiphostservice"/>
    
 
@@ -24,7 +26,9 @@
    		<!-- order matters! -->         
 	    <fileset dir="${lib.xip}" includes="**/*.jar" />      
 	    <fileset dir="${lib.AVT}" includes="**/*.jar" /> 
-    	<fileset dir="${lib.jaxws}" includes="**/*.jar" /> 
+    	<fileset dir="${lib.jaxws}" includes="**/*.jar" />
+   		<fileset dir="${lib.NBIA}" includes="**/*.jar" /> 
+   		<fileset dir="${lib.NBIAext}" includes="**/*.jar" /> 
    </path>
 
    <path id="run.classpath">
@@ -51,6 +55,8 @@
 			<fileset dir="${lib.xip}" includes="*.jar" />
 			<fileset dir="${lib.AVT}" includes="*.jar" />     
 			<fileset dir="${lib.jaxws}" includes="*.jar" /> 
+			<fileset dir="${lib.NBIA}" includes="*.jar" /> 
+			<fileset dir="${lib.NBIAext}" includes="*.jar" /> 
 		</copy>
 		<copy file="./connection.properties" todir="${build.classes}"/>
 		<copy file="./log4j.xml" todir="${build.classes}"/>
