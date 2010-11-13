@@ -4,7 +4,9 @@
 	<classpathentry kind="src" path="src-tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="ECLIPSE_HOME"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/XIP"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AVT"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/NBIA_HostService"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/NBIAext_HostService"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/XIP_HostService"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AVT_HostService"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
