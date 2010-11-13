@@ -71,6 +71,15 @@ public class ApplicationManagerImpl implements ApplicationManager {
 		}
 		return app;
 	}
+	
+	Application defaultApplication;
+	public Application getDefaultApplication(){
+		return defaultApplication;
+	}
+	
+	public void setDefaultApplication(Application application){
+		defaultApplication = application;
+	}
 		
 	public List<Application> getApplications(){
 		return applications;

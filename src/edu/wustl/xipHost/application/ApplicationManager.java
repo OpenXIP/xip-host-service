@@ -23,6 +23,8 @@ public interface ApplicationManager {
 	public boolean removeApplication(UUID applicationUUID);	
 	public Application getApplication(UUID uuid);
 	public Application getApplication(String applicationName);
+	public Application getDefaultApplication();
+	public void setDefaultApplication(Application application);
 	public boolean hasApplication(UUID uuid);
 	public List<Application> getApplications();	
 	public int getNumberOfApplications();
