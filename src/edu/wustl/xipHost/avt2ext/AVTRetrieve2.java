@@ -32,7 +32,7 @@ import edu.wustl.xipHost.avt2ext.iterator.SubElement;
 import edu.wustl.xipHost.avt2ext.iterator.TargetElement;
 
 public class AVTRetrieve2 implements Runnable{
-	final static Logger logger = Logger.getLogger(AVTRetrieve.class);
+	final static Logger logger = Logger.getLogger(AVTRetrieve2.class);
 	ADFacade adService = AVTFactory.getADServiceInstance();
 	TargetElement targetElement;
 	ADRetrieveTarget retrieveTarget;

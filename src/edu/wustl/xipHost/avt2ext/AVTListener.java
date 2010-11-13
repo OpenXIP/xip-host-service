@@ -11,6 +11,5 @@ import java.util.EventListener;
  */
 public interface AVTListener extends EventListener{
 	public void searchResultsAvailable(AVTSearchEvent e);
-	public void retriveResultsAvailable(AVTRetrieveEvent e);
 	public void notifyException(String message);
 }

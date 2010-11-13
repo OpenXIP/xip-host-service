@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import edu.wustl.xipHost.avt2ext.ADQueryTarget;
 import edu.wustl.xipHost.avt2ext.AVTListener;
-import edu.wustl.xipHost.avt2ext.AVTRetrieveEvent;
 import edu.wustl.xipHost.avt2ext.AVTSearchEvent;
 import edu.wustl.xipHost.avt2ext.Query;
 import edu.wustl.xipHost.dataModel.Item;
@@ -479,12 +478,6 @@ public class TargetIteratorRunner implements Runnable, AVTListener {
 
 	@Override
 	public void notifyException(String message) {
-		
-	}
-
-	@Override
-	public void retriveResultsAvailable(AVTRetrieveEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 

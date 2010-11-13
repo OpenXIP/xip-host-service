@@ -37,7 +37,6 @@ import edu.wustl.xipHost.avt2ext.AVTQuery;
 import edu.wustl.xipHost.avt2ext.AVTRetrieve2;
 import edu.wustl.xipHost.avt2ext.AVTRetrieve2Event;
 import edu.wustl.xipHost.avt2ext.AVTRetrieve2Listener;
-import edu.wustl.xipHost.avt2ext.AVTRetrieveEvent;
 import edu.wustl.xipHost.avt2ext.AVTSearchEvent;
 import edu.wustl.xipHost.avt2ext.AVTUtil;
 import edu.wustl.xipHost.avt2ext.iterator.IterationTarget;
@@ -383,12 +382,6 @@ public class Application implements AVTListener, TargetIteratorListener, AVTRetr
 		}
 	}
 
-	@Override
-	public void retriveResultsAvailable(AVTRetrieveEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	@Override
 	public void notifyException(String message) {
 		// TODO Auto-generated method stub
