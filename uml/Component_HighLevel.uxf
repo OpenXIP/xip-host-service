@@ -29,10 +29,11 @@ Worklist
 WG-23
 &lt;&lt;JAX-WS web service&gt;&gt;</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>360</x><y>340</y><w>200</w><h>90</h></coordinates><panel_attributes> 
 ClientToApplication
-&lt;&lt;web services client&gt;&gt;</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>710</x><y>150</y><w>310</w><h>520</h></coordinates><panel_attributes>center:WG-23 Hosted Application</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>740</x><y>310</y><w>200</w><h>100</h></coordinates><panel_attributes> 
+&lt;&lt;web services client&gt;&gt;</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>710</x><y>150</y><w>310</w><h>520</h></coordinates><panel_attributes>center:WG-23 Hosted Application</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>740</x><y>310</y><w>200</w><h>110</h></coordinates><panel_attributes> 
 Application Service
 WG-23
-&lt;&lt;JAX-WS web service&gt;&gt;</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>740</x><y>220</y><w>200</w><h>80</h></coordinates><panel_attributes> 
+&lt;&lt;JAX-WS web service
+on embedded server&gt;&gt;</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>740</x><y>220</y><w>200</w><h>80</h></coordinates><panel_attributes> 
 ClientToHost
 &lt;&lt;web services client&gt;&gt;</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>360</x><y>460</y><w>200</w><h>40</h></coordinates><panel_attributes> 
 AVT</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>360</x><y>580</y><w>200</w><h>40</h></coordinates><panel_attributes> 
