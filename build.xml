@@ -82,6 +82,25 @@
 		<antcall target="create"/>
 		<antcall target="copy"/>
 	</target>
+	
+	<target name="lightDeploy" depends="compile" description="creates web application stracture, deploys classes only">
+			<copy todir="${build.lib}" overwrite="true">
+				<fileset dir="${lib.xip}" includes="*.jar" />
+				<fileset dir="${lib.AVT}" includes="*.jar" />     
+				<fileset dir="${lib.jaxws}" includes="*.jar" /> 
+				<fileset dir="${lib.NBIA}" includes="*.jar" /> 
+				<fileset dir="${lib.NBIAext}" includes="*.jar" /> 
+			</copy>
+			<copy file="./connection.properties" todir="${build.classes}"/>
+			<copy file="./log4j.xml" todir="${build.classes}"/>
+			<copy file="./config/xipConfig.xml" todir="${build.classes}"/>
+			<copy todir="C:\DevelopmentTools\apache-tomcat-6.0.29\webapps\xiphostservice\WEB-INF" overwrite="true">
+				<fileset dir="${build}">
+					<include name="**"/>
+					<exclude name="lib/**"/>  
+				</fileset>
+			</copy>
+	</target>
    
    <target name="clean" description="clean up">
       <!-- Delete the ${build} directory tree -->

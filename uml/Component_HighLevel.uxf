@@ -20,16 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// This text will be stored with each diagram;  use it for notes.</help_text><zoom_level>10</zoom_level><element><type>com.umlet.element.custom.Node</type><coordinates><x>300</x><y>30</y><w>290</w><h>640</h></coordinates><panel_attributes>center:&lt;&lt;device&gt;&gt;
+// This text will be stored with each diagram;  use it for notes.</help_text><zoom_level>10</zoom_level><element><type>com.umlet.element.custom.Node</type><coordinates><x>310</x><y>30</y><w>290</w><h>640</h></coordinates><panel_attributes>center:&lt;&lt;device&gt;&gt;
 center:Tomcat Web Server
-</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Database</type><coordinates><x>780</x><y>30</y><w>150</w><h>40</h></coordinates><panel_attributes>AD IMB DB2</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>560</x><y>0</y><w>240</w><h>70</h></coordinates><panel_attributes>lt=-
-&lt;&lt;JDBC&gt;&gt;</panel_attributes><additional_attributes>30;50;220;50</additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>360</x><y>110</y><w>200</w><h>60</h></coordinates><panel_attributes> 
+</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Database</type><coordinates><x>780</x><y>30</y><w>150</w><h>40</h></coordinates><panel_attributes>AD IMB DB2</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>570</x><y>0</y><w>230</w><h>70</h></coordinates><panel_attributes>lt=-
+&lt;&lt;JDBC&gt;&gt;</panel_attributes><additional_attributes>30;50;210;50</additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>360</x><y>110</y><w>200</w><h>60</h></coordinates><panel_attributes> 
 Worklist 
 &lt;&lt;JAX-WS web service&gt;&gt;</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>360</x><y>190</y><w>200</w><h>120</h></coordinates><panel_attributes>Host Service 
 WG-23
 &lt;&lt;JAX-WS web service&gt;&gt;</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>360</x><y>340</y><w>200</w><h>90</h></coordinates><panel_attributes> 
 ClientToApplication
-&lt;&lt;web services client&gt;&gt;</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>710</x><y>150</y><w>310</w><h>520</h></coordinates><panel_attributes>center:WG-23 Hosted Application</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>740</x><y>310</y><w>200</w><h>110</h></coordinates><panel_attributes> 
+&lt;&lt;web services client&gt;&gt;</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>710</x><y>150</y><w>300</w><h>520</h></coordinates><panel_attributes>center:WG-23 Hosted Application</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>740</x><y>310</y><w>200</w><h>110</h></coordinates><panel_attributes> 
 Application Service
 WG-23
 &lt;&lt;JAX-WS web service
@@ -42,6 +42,7 @@ caGrid/NBIA</panel_attributes><additional_attributes/></element><element><type>c
 e.g. caBIG, caTissue, CIDER</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>50</x><y>120</y><w>130</w><h>80</h></coordinates><panel_attributes> 
 ClientToWorklist</panel_attributes><additional_attributes/></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>150</x><y>90</y><w>230</w><h>70</h></coordinates><panel_attributes>lt=-
 &lt;&lt;SOAP&gt;&gt;</panel_attributes><additional_attributes>30;50;210;50</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>310</x><y>120</y><w>50</w><h>500</h></coordinates><panel_attributes>lt=-
+
 </panel_attributes><additional_attributes>30;30;30;480</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>310</x><y>120</y><w>70</w><h>50</h></coordinates><panel_attributes>lt=-
 </panel_attributes><additional_attributes>50;30;30;30</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>310</x><y>230</y><w>70</w><h>50</h></coordinates><panel_attributes>lt=-
 </panel_attributes><additional_attributes>30;30;50;30</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>310</x><y>350</y><w>70</w><h>50</h></coordinates><panel_attributes>lt=-
