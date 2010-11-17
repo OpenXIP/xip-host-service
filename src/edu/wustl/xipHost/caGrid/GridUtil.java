@@ -1,8 +1,8 @@
 package edu.wustl.xipHost.caGrid;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -10,10 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import com.pixelmed.dicom.Attribute;
-import com.pixelmed.dicom.AttributeList;
-import com.pixelmed.dicom.AttributeTag;
-import com.pixelmed.dicom.DicomDictionary;
+import org.apache.log4j.Logger;
 import edu.wustl.xipHost.dataModel.Patient;
 import edu.wustl.xipHost.dataModel.SearchResult;
 import edu.wustl.xipHost.dataModel.Series;
@@ -26,6 +23,7 @@ import gov.nih.nci.ivi.dicom.modelmap.ModelMap;
 import gov.nih.nci.ivi.dicom.modelmap.ModelMapException;
 
 public class GridUtil {
+	final static Logger logger = Logger.getLogger(GridUtil.class);
 	Properties prop = new Properties();
 	static Map<String, String> map;
 	
@@ -34,8 +32,9 @@ public class GridUtil {
 	 * @param args
 	 * @throws IOException 
 	 */	
-	public Map<String, String> loadNCIAModelMap(FileInputStream fileInputStream) throws IOException{	
-		prop.load(fileInputStream);						
+	public Map<String, String> loadNCIAModelMap(InputStream inputStream) throws IOException{	
+		logger.info("Loading NCIAModelMap");
+		prop.load(inputStream);						
 		map = new HashMap<String, String>();		
 		Enumeration<Object> enumer = prop.keys();
 		while(enumer.hasMoreElements()){
@@ -62,32 +61,34 @@ public class GridUtil {
 		}		 
 	}
 		
-	public CQLQuery convertToCQLStatement(AttributeList criteriaList, CQLTargetName value){
-		if(criteriaList == null || value == null){
+	public CQLQuery convertToCQLStatement(Map<Integer, Object> dicomCriteria, CQLTargetName cqlTargetName){
+		if(dicomCriteria == null || cqlTargetName == null){
 			return null;
 		}
 		HashMap<String, String> query = new HashMap<String, String>();
-		if(value == CQLTargetName.PATIENT){
+		if(cqlTargetName == CQLTargetName.PATIENT){
 			query.put(HashmapToCQLQuery.TARGET_NAME_KEY, gov.nih.nci.ncia.domain.Patient.class.getCanonicalName());
-		}else if( value == CQLTargetName.STUDY){
+		}else if( cqlTargetName == CQLTargetName.STUDY){
 			query.put(HashmapToCQLQuery.TARGET_NAME_KEY, gov.nih.nci.ncia.domain.Study.class.getCanonicalName());
 		}else{
 			query.put(HashmapToCQLQuery.TARGET_NAME_KEY, gov.nih.nci.ncia.domain.Series.class.getCanonicalName());
 		}				
 		CQLQuery cqlq = null;		
-		DicomDictionary dictionary = AttributeList.getDictionary();
-		Iterator iter = dictionary.getTagIterator();		
-		while(iter.hasNext()){
-			AttributeTag attTag  = (AttributeTag)iter.next();
-			String attValue = Attribute.getSingleStringValueOrEmptyString(criteriaList, attTag);
-			String nciaAttName = mapDicomTagToNCIATagName(attTag.toString());
+		Iterator<Integer> keySet = dicomCriteria.keySet().iterator();
+		while(keySet.hasNext()){
+			Integer key = keySet.next();
+			logger.debug("Key int: " + key);
+			String attValue = (String)dicomCriteria.get(key);
+			logger.debug("Value: " + attValue);
+			String hexValue = toDicomHex(key);
+			logger.debug("HEX value: " + hexValue);
+			String nciaAttName = mapDicomTagToNCIATagName(hexValue);
 			if(nciaAttName != null && !attValue.isEmpty()){
-				//System.out.println(nciaAttName + " " + attValue);
-				//wild card is not allowed with grid criteria and should be replaced by empty string 
+				//Wild card is not allowed with grid criteria and should be replaced by empty string 
 				if(attValue.equalsIgnoreCase("*")){attValue = "";}
-				query.put(nciaAttName, attValue);
-			}							
-		}								
+				query.put(nciaAttName, attValue);						
+			}	
+		}							
 		try {
 			HashmapToCQLQuery h2cql = new HashmapToCQLQuery(new ModelMap());
 			if (query.isEmpty()) {					
@@ -182,5 +183,40 @@ public class GridUtil {
 			}
 		}
 		return resultGrid;
-	}	
+	}
+	
+	public String toDicomHex(int i){
+		String hexValue = Integer.toHexString(i);
+		int length = hexValue.length();
+		String firstPart = hexValue.substring(0, length - 4);
+		String secondPart = hexValue.substring(length - 4, length);
+		if(firstPart.length() == 4){
+			firstPart = "0x" + firstPart.toUpperCase();
+		} else {
+			int needed = 4 - firstPart.length();
+			String neededStr = null;
+	        switch (needed) {
+	            case 1: neededStr = "0"; break;
+	            case 2: neededStr = "00"; break;
+	            case 3: neededStr = "000"; break;
+	            case 4: neededStr = "0000"; break;
+	        }
+	        firstPart = "0x" + (neededStr + firstPart).toUpperCase();
+		}
+		if(secondPart.length() == 4){
+			secondPart = "0x" + secondPart.toUpperCase();
+		} else {
+			int needed = 4 - secondPart.length();
+			String neededStr = null;
+	        switch (needed) {
+	            case 1: neededStr = "0"; break;
+	            case 2: neededStr = "00"; break;
+	            case 3: neededStr = "000"; break;
+	            case 4: neededStr = "0000"; break;
+	        }
+	        secondPart = "0x" + (neededStr + secondPart).toUpperCase();
+		}
+		String dicomHex = "(" + firstPart + "," + secondPart + ")";
+		return dicomHex;
+	}
 }
