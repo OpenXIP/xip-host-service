@@ -38,6 +38,7 @@
 		<param name="ConversionPattern" value="%d %-5p [%t] %C:%M:%L - %m%n"/>
   	</layout>  
   </appender>
+  
   <appender name="AVT_Appender" class="org.apache.log4j.DailyRollingFileAppender">
 	<param name="File" value="${catalina.home}/logs/xipHostService/xiphost-avt.log"/>
 	<param name="DatePattern" value="'.'yyyy-ww"/>
@@ -47,6 +48,15 @@
 	</layout>
   </appender>
  
+  <appender name="Grid_Appender" class="org.apache.log4j.DailyRollingFileAppender">
+	<param name="File" value="${catalina.home}/logs/xipHostService/xiphost-grid.log"/>
+	<param name="DatePattern" value="'.'yyyy-ww"/>
+	<!-- param name="Threshold" value="DEBUG"/-->
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%d %-5p [%t] %C:%M:%L - %m%n"/>
+	</layout>
+  </appender>
+  
   <appender name="Worklist_Appender" class="org.apache.log4j.DailyRollingFileAppender">
 	<param name="File" value="${catalina.home}/logs/xipHostService/xip-worklist.log"/>
 	<param name="DatePattern" value="'.'yyyy-ww"/>
@@ -83,6 +93,13 @@
   
   <logger name="edu.wustl.xipHost.application.Application">
 	<appender-ref ref="ApplicationOnHost_Appender"/>
+  </logger>	
+  
+  <logger name="edu.wustl.xipHost.caGrid.GridQuery">
+	<appender-ref ref="Grid_Appender"/>
+  </logger>	
+  <logger name="edu.wustl.xipHost.caGrid.GridUtil">
+	<appender-ref ref="Grid_Appender"/>
   </logger>	
   
   <root>
