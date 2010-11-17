@@ -30,22 +30,27 @@ import org.nema.dicom.wg23.Series;
 import org.nema.dicom.wg23.State;
 import org.nema.dicom.wg23.Study;
 import org.nema.dicom.wg23.Uuid;
-import edu.wustl.xipHost.avt2ext.ADQueryTarget;
 import edu.wustl.xipHost.avt2ext.ADRetrieveTarget;
-import edu.wustl.xipHost.avt2ext.AVTListener;
 import edu.wustl.xipHost.avt2ext.AVTQuery;
 import edu.wustl.xipHost.avt2ext.AVTRetrieve2;
 import edu.wustl.xipHost.avt2ext.AVTRetrieve2Event;
 import edu.wustl.xipHost.avt2ext.AVTRetrieve2Listener;
-import edu.wustl.xipHost.avt2ext.AVTSearchEvent;
 import edu.wustl.xipHost.avt2ext.AVTUtil;
-import edu.wustl.xipHost.avt2ext.iterator.IterationTarget;
-import edu.wustl.xipHost.avt2ext.iterator.IteratorElementEvent;
-import edu.wustl.xipHost.avt2ext.iterator.IteratorEvent;
-import edu.wustl.xipHost.avt2ext.iterator.NotificationRunner;
-import edu.wustl.xipHost.avt2ext.iterator.TargetElement;
-import edu.wustl.xipHost.avt2ext.iterator.TargetIteratorListener;
-import edu.wustl.xipHost.avt2ext.iterator.TargetIteratorRunner;
+import edu.wustl.xipHost.iterator.IterationTarget;
+import edu.wustl.xipHost.iterator.IteratorElementEvent;
+import edu.wustl.xipHost.iterator.IteratorEvent;
+import edu.wustl.xipHost.iterator.NotificationRunner;
+import edu.wustl.xipHost.iterator.TargetElement;
+import edu.wustl.xipHost.iterator.TargetIteratorListener;
+import edu.wustl.xipHost.iterator.TargetIteratorRunner;
+import edu.wustl.xipHost.caGrid.GridLocation;
+import edu.wustl.xipHost.caGrid.GridQuery;
+import edu.wustl.xipHost.caGrid.GridLocation.Type;
+import edu.wustl.xipHost.dataAccess.DataAccessListener;
+import edu.wustl.xipHost.dataAccess.Query;
+import edu.wustl.xipHost.dataAccess.QueryEvent;
+import edu.wustl.xipHost.dataAccess.QueryTarget;
+import edu.wustl.xipHost.dataAccess.RetrieveEvent;
 import edu.wustl.xipHost.dataModel.Patient;
 import edu.wustl.xipHost.dataModel.SearchResult;
 import edu.wustl.xipHost.hostControl.Util;
@@ -54,7 +59,7 @@ import edu.wustl.xipHost.wg23.StateExecutor;
 import edu.wustl.xipHost.wg23.WG23DataModel;
 import edu.wustl.xipHost.worklist.WorklistEntry;
 
-public class Application implements AVTListener, TargetIteratorListener, AVTRetrieve2Listener {	
+public class Application implements TargetIteratorListener, AVTRetrieve2Listener, DataAccessListener {	
 	final static Logger logger = Logger.getLogger(Application.class);
 	UUID id;
 	String name;
@@ -352,40 +357,30 @@ public class Application implements AVTListener, TargetIteratorListener, AVTRetr
 		return clientToApplication;
 	}
 	
-	AVTQuery avtQuery;
+	
+	Query query;
 	public void setWorklistEntry(WorklistEntry entry) {
 		String studyInstanceUID = entry.getStudyInstanceUID();
 		Map<Integer, Object> dicomCriteria = new HashMap<Integer, Object>();
 		Map<String, Object> aimCriteria = new HashMap<String, Object>();			
-		dicomCriteria.put(Tag.StudyInstanceUID, studyInstanceUID);
-		avtQuery = new AVTQuery(dicomCriteria, aimCriteria, ADQueryTarget.PATIENT, null, null);
-		avtQuery.addAVTListener(this);
-		Thread t = new Thread(avtQuery);
-		t.start();		
-	}
-	
-	SearchResult selectedDataSearchResult;
-	@Override
-	public void searchResultsAvailable(AVTSearchEvent e) {
-		SearchResult selectedDataSearchResult = (SearchResult)e.getSource();
-		logger.debug("Found patients: ");
-		for(Patient patient : selectedDataSearchResult.getPatients()){
-			logger.debug(patient.getPatientID() + " " + patient.getPatientName());
-		}
-		//Start TargetIteratorRunner
-		TargetIteratorRunner targetIter = new TargetIteratorRunner(selectedDataSearchResult, getIterationTarget(), avtQuery, getApplicationTmpDir(), this);
-		try {
-			Thread t = new Thread(targetIter);
+		String queryName = "Grid";
+		if(queryName.equalsIgnoreCase("AVT")){
+			dicomCriteria.put(Tag.StudyInstanceUID, studyInstanceUID);
+			query = new AVTQuery(dicomCriteria, aimCriteria, QueryTarget.PATIENT, null, null);
+			query.addDataAccessListener(this);
+			Thread t = new Thread(query);
 			t.start();
-		} catch(Exception e1) {
-			logger.error(e1, e1);
+		} else if (queryName.equalsIgnoreCase("Grid")){
+			dicomCriteria.put(Tag.StudyInstanceUID, "");
+			//dicomCriteria.put(Tag.StudyInstanceUID, "1.3.6.1.4.1.9328.50.1.9085");
+			GridLocation location = new GridLocation("http://node05.cci.emory.edu:8081/wsrf/services/cagrid/DICOMDataService", 
+					Type.DICOM, "DICOM", "DICOM Server Emory");
+			query = new GridQuery(location);
+			query.setQuery(dicomCriteria, aimCriteria, QueryTarget.PATIENT, null, null);
+			query.addDataAccessListener(this);
+			Thread t2 = new Thread(query);
+			t2.start();
 		}
-	}
-
-	@Override
-	public void notifyException(String message) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	Iterator<TargetElement> iter;
@@ -464,5 +459,44 @@ public class Application implements AVTListener, TargetIteratorListener, AVTRetr
 			retrievedTargetElements.notify();
 			logger.debug("Data retrived for TargetElement: " + elementID + " at time: " + System.currentTimeMillis());
 		}
+	}
+
+	@Override
+	public void queryResultsAvailable(QueryEvent e) {
+		Query source = (Query)e.getSource();
+		if(source instanceof AVTQuery){
+			SearchResult selectedDataSearchResult = source.getSearchResult();
+			logger.debug("Found patients: ");
+			for(Patient patient : selectedDataSearchResult.getPatients()){
+				logger.debug(patient.getPatientID() + " " + patient.getPatientName());
+			}
+			//Start TargetIteratorRunner
+			TargetIteratorRunner targetIter = new TargetIteratorRunner(selectedDataSearchResult, getIterationTarget(), query, getApplicationTmpDir(), this);
+			try {
+				Thread t = new Thread(targetIter);
+				t.start();
+			} catch(Exception e1) {
+				logger.error(e1, e1);
+			}
+		} else if (source instanceof GridQuery){
+			SearchResult selectedDataSearchResult = source.getSearchResult();
+			logger.debug("Found patients: ");
+			for(Patient patient : selectedDataSearchResult.getPatients()){
+				logger.debug(patient.getPatientID() + " " + patient.getPatientName());
+			}
+			TargetIteratorRunner targetIter = new TargetIteratorRunner(selectedDataSearchResult, getIterationTarget(), query, getApplicationTmpDir(), this);
+			try {
+				Thread t = new Thread(targetIter);
+				t.start();
+			} catch(Exception e1) {
+				logger.error(e1, e1);
+			}
+		}
+	}
+
+	@Override
+	public void retriveResultsAvailable(RetrieveEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
