@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2010 Washington University in St. Louis. All Rights Reserved.
  */
-package edu.wustl.xipHost.avt2ext.iterator;
+package edu.wustl.xipHost.iterator;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import edu.wustl.xipHost.avt2ext.ADQueryTarget;
-import edu.wustl.xipHost.avt2ext.AVTListener;
-import edu.wustl.xipHost.avt2ext.AVTSearchEvent;
-import edu.wustl.xipHost.avt2ext.Query;
+import edu.wustl.xipHost.dataAccess.DataAccessListener;
+import edu.wustl.xipHost.dataAccess.Query;
+import edu.wustl.xipHost.dataAccess.QueryEvent;
+import edu.wustl.xipHost.dataAccess.QueryTarget;
+import edu.wustl.xipHost.dataAccess.RetrieveEvent;
 import edu.wustl.xipHost.dataModel.Item;
 import edu.wustl.xipHost.dataModel.Patient;
 import edu.wustl.xipHost.dataModel.SearchResult;
@@ -27,7 +28,7 @@ import org.dcm4che2.data.Tag;
  * @author Matthew Kelsey & Jarek Krych
  *
  */
-public class TargetIteratorRunner implements Runnable, AVTListener {
+public class TargetIteratorRunner implements Runnable, DataAccessListener {
 	final static Logger logger = Logger.getLogger(TargetIteratorRunner.class);
 	SearchResult selectedDataSearchResult;
 	IterationTarget target;
@@ -95,7 +96,6 @@ public class TargetIteratorRunner implements Runnable, AVTListener {
 				patientIt = patients.iterator();
 			}
 		} catch(Exception e) {
-			notifyException(e.getMessage());
 			logger.error(e, e);
 		}
 		// Fill targetElementsList with target elements from searchResult
@@ -129,8 +129,8 @@ public class TargetIteratorRunner implements Runnable, AVTListener {
 			Map<String, Object> aimCriteria = new HashMap<String, Object>();
 			dicomCriteria.put(Tag.PatientName, patient.getPatientName());
 			dicomCriteria.put(Tag.PatientID, patient.getPatientID());
-			query.setAVTQuery(dicomCriteria, aimCriteria, ADQueryTarget.STUDY, selectedDataSearchResult, patient);
-			query.addAVTListener(this);
+			query.setQuery(dicomCriteria, aimCriteria, QueryTarget.STUDY, selectedDataSearchResult, patient);
+			query.addDataAccessListener(this);
 			Thread t = new Thread((Runnable) query);
 			t.start();	
 			try {
@@ -142,7 +142,6 @@ public class TargetIteratorRunner implements Runnable, AVTListener {
 					}
 				}
 			} catch (InterruptedException e) {
-				notifyException(e.getMessage());
 				logger.error(e, e);
 				return false;
 			}
@@ -167,8 +166,8 @@ public class TargetIteratorRunner implements Runnable, AVTListener {
 			dicomCriteria.put(Tag.PatientID, patientId);
 			dicomCriteria.put(Tag.PatientName, patientName);
 			dicomCriteria.put(Tag.StudyInstanceUID, study.getStudyInstanceUID());
-			query.setAVTQuery(dicomCriteria, aimCriteria, ADQueryTarget.SERIES, selectedDataSearchResult, study);
-			query.addAVTListener(this);
+			query.setQuery(dicomCriteria, aimCriteria, QueryTarget.SERIES, selectedDataSearchResult, study);
+			query.addDataAccessListener(this);
 			Thread t = new Thread((Runnable) query);
 			t.start();
 			try {
@@ -182,7 +181,6 @@ public class TargetIteratorRunner implements Runnable, AVTListener {
 					}
 				}
 			} catch (InterruptedException e) {
-				notifyException(e.getMessage());
 				logger.error(e, e);
 				return false;
 			}
@@ -213,8 +211,8 @@ public class TargetIteratorRunner implements Runnable, AVTListener {
 			dicomCriteria.put(Tag.StudyInstanceUID, studyInstanceUID);
 			dicomCriteria.put(Tag.SeriesInstanceUID, series.getSeriesInstanceUID());
 			//dicomCriteria.put(Tag.Modality, series.getModality());
-			query.setAVTQuery(dicomCriteria, aimCriteria, ADQueryTarget.ITEM, selectedDataSearchResult, series);
-			query.addAVTListener(this);
+			query.setQuery(dicomCriteria, aimCriteria, QueryTarget.ITEM, selectedDataSearchResult, series);
+			query.addDataAccessListener(this);
 			Thread t = new Thread((Runnable) query);
 			t.start();
 			try {
@@ -230,7 +228,6 @@ public class TargetIteratorRunner implements Runnable, AVTListener {
 					}
 				}
 			} catch (InterruptedException e) {
-				notifyException(e.getMessage());
 				logger.error(e, e);
 				return false;
 			}
@@ -476,13 +473,17 @@ public class TargetIteratorRunner implements Runnable, AVTListener {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public void notifyException(String message) {
-		
-	}
 
 	@Override
-	synchronized public void searchResultsAvailable(AVTSearchEvent e) {
-		selectedDataSearchResult = (SearchResult) e.getSource();
+	public void queryResultsAvailable(QueryEvent e) {
+		Query query = (Query) e.getSource();
+		selectedDataSearchResult = query.getSearchResult();
+	}
+
+
+	@Override
+	public void retriveResultsAvailable(RetrieveEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
