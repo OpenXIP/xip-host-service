@@ -163,10 +163,11 @@ public class Application implements TargetIteratorListener, AVTRetrieve2Listener
 	public IterationTarget getIterationTarget() {
 		return iterationTarget;
 	}
-
-	public void setIterationTarget(IterationTarget iterationTarget) {
-		this.iterationTarget = iterationTarget;
+	
+	public void setIterationTarget(IterationTarget target){
+		iterationTarget = target;
 	}
+	
 	
 	File appTmpDir;
 	public void setApplicationTmpDir(File tmpDir){
@@ -371,8 +372,9 @@ public class Application implements TargetIteratorListener, AVTRetrieve2Listener
 			Thread t = new Thread(query);
 			t.start();
 		} else if (queryName.equalsIgnoreCase("Grid")){
-			dicomCriteria.put(Tag.StudyInstanceUID, "");
-			//dicomCriteria.put(Tag.StudyInstanceUID, "1.3.6.1.4.1.9328.50.1.9085");
+			System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.NoOpLog");		
+			//dicomCriteria.put(Tag.StudyInstanceUID, "");
+			dicomCriteria.put(Tag.StudyInstanceUID, "1.3.6.1.4.1.9328.50.1.9085");
 			GridLocation location = new GridLocation("http://node05.cci.emory.edu:8081/wsrf/services/cagrid/DICOMDataService", 
 					Type.DICOM, "DICOM", "DICOM Server Emory");
 			query = new GridQuery(location);

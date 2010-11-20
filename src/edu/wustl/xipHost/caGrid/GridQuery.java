@@ -6,10 +6,8 @@ package edu.wustl.xipHost.caGrid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ConnectException;
 import java.rmi.RemoteException;
 import java.util.Map;
-import org.apache.axis.types.URI.MalformedURIException;
 import org.apache.log4j.Logger;
 import org.globus.wsrf.encoding.ObjectSerializer;
 import org.globus.wsrf.encoding.SerializationException;
@@ -25,6 +23,8 @@ import edu.wustl.xipHost.dataModel.Study;
 import gov.nih.nci.cagrid.cqlquery.CQLQuery;
 import gov.nih.nci.cagrid.cqlresultset.CQLQueryResults;
 import gov.nih.nci.cagrid.data.client.DataServiceClient;
+import gov.nih.nci.cagrid.data.faults.MalformedQueryExceptionType;
+import gov.nih.nci.cagrid.data.faults.QueryProcessingExceptionType;
 import gov.nih.nci.cagrid.data.utilities.CQLQueryResultsIterator;
 import gov.nih.nci.cagrid.ncia.client.NCIACoreServiceClient;
 
@@ -32,7 +32,7 @@ import gov.nih.nci.cagrid.ncia.client.NCIACoreServiceClient;
  * @author Jaroslaw Krych
  *
  */
-public class GridQuery implements Runnable, Query {
+public class GridQuery implements Query {
 	final static Logger logger = Logger.getLogger(GridQuery.class);
 	CQLQuery cql;
 	GridLocation gridLocation;
@@ -43,6 +43,9 @@ public class GridQuery implements Runnable, Query {
 	Object queriedObject;
 	GridManager gridMgr = GridManagerFactory.getInstance();
 	GridUtil gridUtil;
+	CQLQueryResultsIterator iter;
+	DataServiceClient dicomClient = null;
+	NCIACoreServiceClient nciaClient = null;
 	
 	public GridQuery(GridLocation location){
 		this.gridLocation = location;
@@ -50,7 +53,11 @@ public class GridQuery implements Runnable, Query {
 			InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("NCIAModelMap.properties");
 			gridUtil = gridMgr.getGridUtil();
 			gridUtil.loadNCIAModelMap(inputStream);
-			System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.NoOpLog");		
+			if(location != null && location.getProtocolVersion().equalsIgnoreCase("DICOM")){
+				dicomClient = new DataServiceClient(location.getAddress());			
+			}else if(location != null && location.getProtocolVersion().equalsIgnoreCase("NBIA-4.2")){
+				nciaClient = new NCIACoreServiceClient(location.getAddress());
+			}
 		} catch (FileNotFoundException e) {
 			logger.error(e, e);
 		} catch (IOException e) {
@@ -130,58 +137,36 @@ public class GridQuery implements Runnable, Query {
 		
 	SearchResult searchResult;
 	public void run() {
+		long time1 = System.currentTimeMillis();
 		logger.info("Executing GRID query.");
-		try {		 
-			searchResult = query(cql, gridLocation, previousSearchResult, queriedObject);
-			logger.info("GRID query finished.");
-			fireResultsAvailable();			
-		} catch (MalformedURIException e) {
+		final CQLQuery fcqlq = cql;		
+		CQLQueryResults results = null;
+		try {
+			switch (target) {
+		    	case PATIENT:	 
+					if(gridLocation != null && gridLocation.getProtocolVersion().equalsIgnoreCase("DICOM")){
+						results = dicomClient.query(fcqlq);
+					}else if(gridLocation != null && gridLocation.getProtocolVersion().equalsIgnoreCase("NBIA-4.2")){
+						results = nciaClient.query(fcqlq);
+					}						
+			        iter = new CQLQueryResultsIterator(results);        	                
+			        searchResult = GridUtil.convertCQLQueryResultsIteratorToSearchResult(iter, gridLocation, previousSearchResult, queriedObject);		
+		    	case STUDY:
+		    		
+		    	case SERIES:
+		    		
+			}
+		} catch (MalformedQueryExceptionType e) {
 			logger.error(e, e);
-			searchResult = null;
-			return;
+		} catch (QueryProcessingExceptionType e) {
+			logger.error(e, e);
 		} catch (RemoteException e) {
 			logger.error(e, e);
-			searchResult = null;
-			return;
-		} catch (ConnectException e) {
-			logger.error(e, e);
-			searchResult = null;
-			return;
-		}		
-	}
-	
-	DataServiceClient dicomClient = null;
-	NCIACoreServiceClient nciaClient = null;
-
-	/**
-	 * Method used to perform progressive GRID query. 
-	 * @param cql - CQL query statement
-	 * @param gridLocation - GRID location e.g. caGRID or NBIA 
-	 * @param previousSearchResult - null with first query call 
-	 * @param queriedObject - null with first query call
-	 * @return SearchResult object, that becomes previousSearchResult in subsequent query calls.
-	 */
-	public SearchResult query(CQLQuery query, GridLocation location, SearchResult previousSearchResult, Object queriedObject) throws MalformedURIException, RemoteException, ConnectException{		
-		CQLQueryResultsIterator iter;		
-		if(location != null && location.getProtocolVersion().equalsIgnoreCase("DICOM")){
-			dicomClient = new DataServiceClient(location.getAddress());			
-		}else if(location != null && location.getProtocolVersion().equalsIgnoreCase("NBIA-4.2")){
-			nciaClient = new NCIACoreServiceClient(location.getAddress());
-		}else{
-			return null;
 		}
-		final CQLQuery fcqlq = query;		
-		CQLQueryResults results = null;
-		if(location != null && location.getProtocolVersion().equalsIgnoreCase("DICOM")){
-			results = dicomClient.query(fcqlq);
-		}else if(location != null && location.getProtocolVersion().equalsIgnoreCase("NBIA-4.2")){
-			results = nciaClient.query(fcqlq);
-		}						
-        iter = new CQLQueryResultsIterator(results);        
-        //SearchResult result = GridUtil.convertCQLQueryResultsIteratorToSearchResult(iter, location);	                
-        SearchResult result = GridUtil.convertCQLQueryResultsIteratorToSearchResult(iter, location, previousSearchResult, queriedObject);
-        return result;			
-	}		
+		long time2 = System.currentTimeMillis();
+		logger.info("GRID query finished in " + (time2 - time1) + " ms");
+		fireResultsAvailable();	
+	}	
 	
 	@Override
 	public SearchResult getSearchResult(){
