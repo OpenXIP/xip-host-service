@@ -3,6 +3,7 @@ package edu.wustl.xipHost.caGrid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -11,6 +12,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import org.apache.log4j.Logger;
+
+import edu.wustl.xipHost.dataAccess.Util;
 import edu.wustl.xipHost.dataModel.Patient;
 import edu.wustl.xipHost.dataModel.SearchResult;
 import edu.wustl.xipHost.dataModel.Series;
@@ -126,7 +129,7 @@ public class GridUtil {
 		while (iter.hasNext()) {			
 			java.lang.Object obj = iter.next();
 			if (obj == null) {
-				System.out.println("something not right.  obj is null");
+				logger.warn("Object recieved as a result of query is null");
 				continue;
 			}
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
@@ -169,6 +172,8 @@ public class GridUtil {
 					studyFromGrid = new Study(studyDate, studyID, studyDesc, studyInstanceUID);
 					patientFromGrid.addStudy(studyFromGrid);
 				}
+				Timestamp lastUpdated = new Timestamp(Calendar.getInstance().getTime().getTime());
+				patientFromGrid.setLastUpdated(lastUpdated);
 			} else if(selectedObject instanceof Study){
 				studyFromGrid = Study.class.cast(selectedObject);
 				gov.nih.nci.ncia.domain.Series seriesGrid = gov.nih.nci.ncia.domain.Series.class.cast(obj);
@@ -180,8 +185,11 @@ public class GridUtil {
 					seriesFromGrid = new Series(seriesNumber, modality, seriesDesc, seriesInstanceUID);	
 					studyFromGrid.addSeries(seriesFromGrid);
 				}
+				Timestamp lastUpdated = new Timestamp(Calendar.getInstance().getTime().getTime());
+				studyFromGrid.setLastUpdated(lastUpdated);
 			}
 		}
+		Util.searchResultToLog(resultGrid);
 		return resultGrid;
 	}
 	
