@@ -31,6 +31,7 @@ import org.nema.dicom.wg23.Uuid;
 import edu.wustl.xipHost.iterator.IterationTarget;
 import edu.wustl.xipHost.iterator.SubElement;
 import edu.wustl.xipHost.iterator.TargetElement;
+import edu.wustl.xipHost.dataAccess.Util;
 import edu.wustl.xipHost.dataModel.AIMItem;
 import edu.wustl.xipHost.dataModel.ImageItem;
 import edu.wustl.xipHost.dataModel.Item;
@@ -64,7 +65,7 @@ public class AVTUtil {
 		while (iter.hasNext()) {
 			java.lang.Object obj = iter.next();
 			if (obj == null) {
-				System.out.println("something not right.  obj is null");
+				logger.warn("Object recieved as a result of query is null");
 				continue;
 			}
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
@@ -148,38 +149,7 @@ public class AVTUtil {
 				seriesFromAD.setLastUpdated(lastUpdated);
 			}
 		}	
-		if(logger.isDebugEnabled()){
-			 Iterator<Patient> patients = resultAD.getPatients().iterator();
-			 while(patients.hasNext()){
-				 Patient patient = patients.next();
-				 Timestamp patientLastUpdated = patient.getLastUpdated();
-				 String strPatientLastUpdated = null;
-				 if(patientLastUpdated != null){
-					 strPatientLastUpdated = patientLastUpdated.toString();
-				 }
-				 logger.debug(patient.toString() + " Last updated: " + strPatientLastUpdated);
-				 Iterator<Study> studies = patient.getStudies().iterator();
-				 while(studies.hasNext()){
-					 Study study = studies.next();
-					 Timestamp studyLastUpdated = study.getLastUpdated();
-					 String strStudyLastUpdated = null;
-					 if(studyLastUpdated != null){
-						 strStudyLastUpdated = studyLastUpdated.toString();
-					 }
-					 logger.debug(study.toString() + " Last updated: " + strStudyLastUpdated);
-					 Iterator<Series> series = study.getSeries().iterator();
-					 while(series.hasNext()){
-						 Series oneSeries = series.next();
-						 Timestamp seriesLastUpdated = oneSeries.getLastUpdated();
-						 String strSeriesLastUpdated = null;
-						 if(seriesLastUpdated != null){
-							 strSeriesLastUpdated = seriesLastUpdated.toString();
-						 }
-						 logger.debug(oneSeries.toString() + " Last updated: " + strSeriesLastUpdated);
-					 }
-				 }
-			 }
-		}
+		Util.searchResultToLog(resultAD);
 		return resultAD;
 	}
 	
