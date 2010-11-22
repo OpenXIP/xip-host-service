@@ -374,9 +374,11 @@ public class Application implements TargetIteratorListener, AVTRetrieve2Listener
 		} else if (queryName.equalsIgnoreCase("Grid")){
 			System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.NoOpLog");		
 			//dicomCriteria.put(Tag.StudyInstanceUID, "");
-			dicomCriteria.put(Tag.StudyInstanceUID, "1.3.6.1.4.1.9328.50.1.9085");
-			GridLocation location = new GridLocation("http://node05.cci.emory.edu:8081/wsrf/services/cagrid/DICOMDataService", 
-					Type.DICOM, "DICOM", "DICOM Server Emory");
+			dicomCriteria.put(Tag.StudyInstanceUID, "1.3.6.1.4.1.9328.50.1.9084");
+			//GridLocation location = new GridLocation("http://node05.cci.emory.edu:8081/wsrf/services/cagrid/DICOMDataService", 
+			//		Type.DICOM, "DICOM", "DICOM Server Emory");
+			GridLocation location = new GridLocation("http://imaging.nci.nih.gov/wsrf/services/cagrid/NCIACoreService", 
+					Type.DICOM, "NBIA-4.2", "NBIA Production Server at NCI");
 			query = new GridQuery(location);
 			query.setQuery(dicomCriteria, aimCriteria, QueryTarget.PATIENT, null, null);
 			query.addDataAccessListener(this);
@@ -465,8 +467,10 @@ public class Application implements TargetIteratorListener, AVTRetrieve2Listener
 
 	@Override
 	public void queryResultsAvailable(QueryEvent e) {
+		logger.debug("Query result available");
 		Query source = (Query)e.getSource();
 		if(source instanceof AVTQuery){
+			logger.debug("Source: " + AVTQuery.class.getName());
 			SearchResult selectedDataSearchResult = source.getSearchResult();
 			logger.debug("Found patients: ");
 			for(Patient patient : selectedDataSearchResult.getPatients()){
@@ -481,6 +485,7 @@ public class Application implements TargetIteratorListener, AVTRetrieve2Listener
 				logger.error(e1, e1);
 			}
 		} else if (source instanceof GridQuery){
+			logger.debug("Source: " + GridQuery.class.getName());
 			SearchResult selectedDataSearchResult = source.getSearchResult();
 			logger.debug("Found patients: ");
 			for(Patient patient : selectedDataSearchResult.getPatients()){
@@ -493,6 +498,8 @@ public class Application implements TargetIteratorListener, AVTRetrieve2Listener
 			} catch(Exception e1) {
 				logger.error(e1, e1);
 			}
+		} else {
+			logger.debug("Source: " + source.getClass().getName());
 		}
 	}
 
