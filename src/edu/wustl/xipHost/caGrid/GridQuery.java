@@ -20,6 +20,7 @@ import edu.wustl.xipHost.dataAccess.QueryTarget;
 import edu.wustl.xipHost.dataModel.Patient;
 import edu.wustl.xipHost.dataModel.SearchResult;
 import edu.wustl.xipHost.dataModel.Study;
+import edu.wustl.xipHost.iterator.Criteria;
 import gov.nih.nci.cagrid.cqlquery.CQLQuery;
 import gov.nih.nci.cagrid.cqlresultset.CQLQueryResults;
 import gov.nih.nci.cagrid.data.client.DataServiceClient;
@@ -66,8 +67,19 @@ public class GridQuery implements Query {
 	
 	@Override
 	public void setQuery(Map<Integer, Object> dicomCriteria, Map<String, Object> aimCriteria, QueryTarget target, SearchResult previousSearchResult, Object queriedObject) {
-		this.dicomCriteria = dicomCriteria; 
-		cql = gridUtil.convertToCQLStatement(dicomCriteria, CQLTargetName.PATIENT);
+		this.dicomCriteria = dicomCriteria;
+		logger.debug("Original criteria: ");
+		Criteria.logDicomCriteria(dicomCriteria);
+		Criteria.logAimCriteria(aimCriteria);
+		CQLTargetName cqlTargetName = null;
+		if(target.equals(QueryTarget.PATIENT)){
+			cqlTargetName = CQLTargetName.PATIENT;
+		} else if (target.equals(QueryTarget.STUDY)){
+			cqlTargetName = CQLTargetName.STUDY;
+		} else if (target.equals(QueryTarget.SERIES)){
+			cqlTargetName = CQLTargetName.SERIES;
+		}
+		cql = gridUtil.convertToCQLStatement(dicomCriteria, cqlTargetName);
 		this.aimCriteria = aimCriteria; 
 		this.target = target; 
 		this.previousSearchResult = previousSearchResult;
@@ -144,17 +156,24 @@ public class GridQuery implements Query {
 		try {
 			switch (target) {
 		    	case PATIENT:	 
-					if(gridLocation != null && gridLocation.getProtocolVersion().equalsIgnoreCase("DICOM")){
-						results = dicomClient.query(fcqlq);
-					}else if(gridLocation != null && gridLocation.getProtocolVersion().equalsIgnoreCase("NBIA-4.2")){
-						results = nciaClient.query(fcqlq);
-					}						
-			        iter = new CQLQueryResultsIterator(results);        	                
-			        searchResult = GridUtil.convertCQLQueryResultsIteratorToSearchResult(iter, gridLocation, previousSearchResult, queriedObject);		
+							
 		    	case STUDY:
 		    		
 		    	case SERIES:
 		    		
+			}
+			
+			if(gridLocation != null && gridLocation.getProtocolVersion().equalsIgnoreCase("DICOM")){
+				results = dicomClient.query(fcqlq);
+			}else if(gridLocation != null && gridLocation.getProtocolVersion().equalsIgnoreCase("NBIA-4.2")){
+				results = nciaClient.query(fcqlq);
+			}						
+	        iter = new CQLQueryResultsIterator(results);        	                
+	        searchResult = GridUtil.convertCQLQueryResultsIteratorToSearchResult(iter, gridLocation, previousSearchResult, queriedObject);
+			
+	        if(previousSearchResult == null){
+				Criteria originalCriteria = new Criteria(dicomCriteria, aimCriteria);
+				searchResult.setOriginalCriteria(originalCriteria);
 			}
 		} catch (MalformedQueryExceptionType e) {
 			logger.error(e, e);
