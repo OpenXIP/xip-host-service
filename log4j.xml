@@ -66,6 +66,15 @@
 	</layout>
   </appender>
   
+  <appender name="TargetIterator_Appender" class="org.apache.log4j.DailyRollingFileAppender">
+	<param name="File" value="${catalina.home}/logs/xipHostService/xip-targetIterator.log"/>
+	<param name="DatePattern" value="'.'yyyy-ww"/>
+	<!-- param name="Threshold" value="DEBUG"/-->
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%d %-5p [%t] %C:%M:%L - %m%n"/>
+	</layout>
+  </appender>
+  
   <logger name="edu.wustl.xipHost.worklist.WorklistImpl">
 	<appender-ref ref="Worklist_Appender"/>
   </logger>
@@ -83,7 +92,11 @@
   
   
   <logger name="edu.wustl.xipHost.avt2ext.TargetIterator">
-	<appender-ref ref="AVT_Appender"/>
+	<appender-ref ref="TargetIterator_Appender"/>
+  </logger>
+  
+  <logger name="edu.wustl.xipHost.iterator.Criteria">
+	<appender-ref ref="TargetIterator_Appender"/>
   </logger>
   
   
@@ -100,7 +113,7 @@
   </logger>	
   <logger name="edu.wustl.xipHost.caGrid.GridUtil">
 	<appender-ref ref="Grid_Appender"/>
-  </logger>	
+  </logger>		
   
   <root>
     <!-- level value="debug"/-->
