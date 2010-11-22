@@ -24,28 +24,28 @@
 center:Tomcat Web Server
 </panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Database</type><coordinates><x>2210</x><y>30</y><w>150</w><h>40</h></coordinates><panel_attributes>AD IMB DB2</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1950</x><y>0</y><w>280</w><h>70</h></coordinates><panel_attributes>lt=-
 &lt;&lt;JDBC&gt;&gt;</panel_attributes><additional_attributes>30;50;260;50</additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>350</x><y>100</y><w>320</w><h>80</h></coordinates><panel_attributes>
-Data Definition 
+Data Request
 SubmissionService
-&lt;&lt;JAX-WS web service&gt;&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>1640</x><y>690</y><w>290</w><h>90</h></coordinates><panel_attributes> 
+&lt;&lt;JAX-WS web service&gt;&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>1640</x><y>720</y><w>290</w><h>80</h></coordinates><panel_attributes> 
 ClientToApplication
 &lt;&lt;web services client&gt;&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>2120</x><y>260</y><w>350</w><h>520</h></coordinates><panel_attributes>center:WG-23 Hosted Application</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>2170</x><y>420</y><w>200</w><h>110</h></coordinates><panel_attributes> 
 HostedApplication Service
 WG-23
 &lt;&lt;JAX-WS web service&gt;&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>2170</x><y>330</y><w>200</w><h>80</h></coordinates><panel_attributes> 
 ClientToHost
-&lt;&lt;web services client&gt;&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>350</x><y>690</y><w>200</w><h>80</h></coordinates><panel_attributes>
-AVT</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>770</x><y>690</y><w>200</w><h>80</h></coordinates><panel_attributes> 
-DICOM</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>560</x><y>690</y><w>200</w><h>80</h></coordinates><panel_attributes> 
+&lt;&lt;web services client&gt;&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>350</x><y>720</y><w>200</w><h>80</h></coordinates><panel_attributes>
+AVT</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>770</x><y>720</y><w>200</w><h>80</h></coordinates><panel_attributes> 
+DICOM</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>560</x><y>720</y><w>200</w><h>80</h></coordinates><panel_attributes> 
 caGrid/NBIA</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>0</x><y>20</y><w>190</w><h>250</h></coordinates><panel_attributes>center:Application
 e.g. caBIG, caTissue, CIDER</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>30</x><y>110</y><w>130</w><h>100</h></coordinates><panel_attributes> 
 Client
 to Data Definition
 Submission Service</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>130</x><y>80</y><w>240</w><h>70</h></coordinates><panel_attributes>lt=-
-&lt;&lt;SOAP&gt;&gt;</panel_attributes><additional_attributes>30;50;220;50</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1270</x><y>340</y><w>920</w><h>220</h></coordinates><panel_attributes>lt=-
-               &lt;&lt;SOAP&gt;&gt;</panel_attributes><additional_attributes>30;200;750;200;750;30;900;30</additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>2170</x><y>540</y><w>200</w><h>70</h></coordinates><panel_attributes> 
+&lt;&lt;SOAP&gt;&gt;</panel_attributes><additional_attributes>30;50;220;50</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1310</x><y>330</y><w>880</w><h>260</h></coordinates><panel_attributes>lt=-
+               &lt;&lt;SOAP&gt;&gt;</panel_attributes><additional_attributes>30;240;710;240;710;30;860;30</additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>2170</x><y>540</y><w>200</w><h>70</h></coordinates><panel_attributes> 
 Analytical component</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>2170</x><y>620</y><w>200</w><h>130</h></coordinates><panel_attributes>center:Rendering</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Component</type><coordinates><x>2190</x><y>660</y><w>160</w><h>70</h></coordinates><panel_attributes> 
-XIP Libraries</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>350</x><y>220</y><w>1590</w><h>410</h></coordinates><panel_attributes>center:Host Service 
-center:&lt;&lt;JAX-WS web services&gt;&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>370</x><y>460</y><w>1530</w><h>140</h></coordinates><panel_attributes>center:Application Servie Layer</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>370</x><y>270</y><w>1530</w><h>180</h></coordinates><panel_attributes>center:Business Service Layer
+XIP Libraries</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>340</x><y>220</y><w>1590</w><h>430</h></coordinates><panel_attributes>center:Host Service 
+center:&lt;&lt;JAX-WS web services&gt;&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>370</x><y>500</y><w>1530</w><h>140</h></coordinates><panel_attributes>center:Application Servie Layer</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Node</type><coordinates><x>370</x><y>270</y><w>1530</w><h>200</h></coordinates><panel_attributes>center:Business Service Layer
 </panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>380</x><y>310</y><w>210</w><h>110</h></coordinates><panel_attributes>Query Service
 * run()
 * notifyQueryResultsAvailable()</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>600</x><y>310</y><w>180</w><h>110</h></coordinates><panel_attributes>Retrieve Service
@@ -58,19 +58,38 @@ center:&lt;&lt;JAX-WS web services&gt;&gt;</panel_attributes><additional_attribu
 *query(XPath)
 * validateIsDicom(File)</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1300</x><y>310</y><w>190</w><h>110</h></coordinates><panel_attributes>TargetIterator Service
 * run(SearchResult)
-* notifyIteratorAvailable()</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1010</x><y>690</y><w>220</w><h>80</h></coordinates><panel_attributes>Util
+* notifyIteratorAvailable()</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1000</x><y>720</y><w>220</w><h>80</h></coordinates><panel_attributes>Util
 * getTmpDir()
 * getOutDir()
-* generateUUID()</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1110</x><y>500</y><w>190</w><h>80</h></coordinates><panel_attributes>WG-23 interface</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1500</x><y>310</y><w>180</w><h>110</h></coordinates><panel_attributes>DataSource Service
+* generateUUID()</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1150</x><y>540</y><w>190</w><h>80</h></coordinates><panel_attributes>WG-23 interface</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1500</x><y>310</y><w>180</w><h>110</h></coordinates><panel_attributes>DataSource Service
 * register(DataSource)
 * activate(DataSource)
-* suspend(DataSource)</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1700</x><y>310</y><w>170</w><h>110</h></coordinates><panel_attributes>Application Service
+* suspend(DataSource)
+* getDataSources()</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1700</x><y>310</y><w>170</w><h>110</h></coordinates><panel_attributes>Application Service
 * register(Application)
 * verify(Application)
 </panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Database</type><coordinates><x>2210</x><y>130</y><w>150</w><h>40</h></coordinates><panel_attributes>HostDB IBM DB2</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1950</x><y>100</y><w>280</w><h>70</h></coordinates><panel_attributes>lt=-
-&lt;&lt;JDBC&gt;&gt;</panel_attributes><additional_attributes>30;50;260;50</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1900</x><y>440</y><w>290</w><h>320</h></coordinates><panel_attributes>lt=-
-                &lt;&lt;SOAP&gt;&gt;</panel_attributes><additional_attributes>30;300;150;300;150;30;270;30</additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1290</x><y>690</y><w>330</w><h>90</h></coordinates><panel_attributes>StateManager
+&lt;&lt;JDBC&gt;&gt;</panel_attributes><additional_attributes>30;50;260;50</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1900</x><y>440</y><w>290</w><h>340</h></coordinates><panel_attributes>lt=-
+                &lt;&lt;SOAP&gt;&gt;</panel_attributes><additional_attributes>30;320;150;320;150;30;270;30</additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1250</x><y>720</y><w>330</w><h>80</h></coordinates><panel_attributes>StateManager
 * setID()
 * verifyState()
 * setState()
-* getState()</panel_attributes><additional_attributes></additional_attributes></element></umlet_diagram>
+* getState()</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>450</x><y>390</y><w>50</w><h>60</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;40;30;30</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>660</x><y>390</y><w>50</w><h>60</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;40;30;30</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1140</x><y>390</y><w>50</w><h>60</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;30;40</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1370</x><y>390</y><w>50</w><h>60</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;30;40</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1560</x><y>390</y><w>50</w><h>60</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;40;30;30</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1770</x><y>390</y><w>50</w><h>60</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;40;30;30</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>450</x><y>400</y><w>1370</w><h>50</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;1350;30</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>880</x><y>390</y><w>50</w><h>60</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;30;40</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1210</x><y>400</y><w>50</w><h>160</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;30;140</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>270</x><y>360</y><w>50</w><h>360</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;30;340</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>270</x><y>360</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;100;30</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>270</x><y>670</y><w>1540</w><h>50</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;1520;30</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>430</x><y>670</y><w>50</w><h>70</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;30;50</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>630</x><y>670</y><w>50</w><h>70</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;30;50</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>850</x><y>670</y><w>50</w><h>70</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;30;50</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1090</x><y>670</y><w>50</w><h>70</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;30;50</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1400</x><y>670</y><w>50</w><h>70</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;30;50</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1760</x><y>670</y><w>50</w><h>70</h></coordinates><panel_attributes>lt=-
+</panel_attributes><additional_attributes>30;30;30;50</additional_attributes></element></umlet_diagram>
