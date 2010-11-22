@@ -16,6 +16,7 @@ import edu.wustl.xipHost.dataAccess.Query;
 import edu.wustl.xipHost.dataAccess.QueryEvent;
 import edu.wustl.xipHost.dataAccess.QueryTarget;
 import edu.wustl.xipHost.dataAccess.RetrieveEvent;
+import edu.wustl.xipHost.dataAccess.Util;
 import edu.wustl.xipHost.dataModel.Item;
 import edu.wustl.xipHost.dataModel.Patient;
 import edu.wustl.xipHost.dataModel.SearchResult;
@@ -57,21 +58,8 @@ public class TargetIteratorRunner implements Runnable, DataAccessListener {
 				throw new IllegalArgumentException("Tmporary Directory: " + pathTmpDir.getAbsolutePath() + " doesn't exists");
 		}
 		this.selectedDataSearchResult = selectedDataSearchResult;
-		if(logger.isDebugEnabled()){
-			List<Patient> patients = selectedDataSearchResult.getPatients();
-			logger.debug("Value of selectedDataSearchresult as passed to TargetIteratorRunner constructor: ");
-			for(Patient logPatient : patients){
-				logger.debug(logPatient.toString());
-				List<Study> studies = logPatient.getStudies();
-				for(Study logStudy : studies){
-					logger.debug("   " + logStudy.toString());
-					List<Series> series = logStudy.getSeries();
-					for(Series logSeries : series){
-						logger.debug("      " + logSeries.toString());
-					}
-				}
-			}
-		}
+		logger.debug("Value of selectedDataSearchresult as passed to TargetIteratorRunner constructor: ");
+		Util.searchResultToLog(selectedDataSearchResult);
 		this.target = target;
 		logger.debug("Iteration target: " + target.toString());
 		this.query = query;
@@ -127,6 +115,7 @@ public class TargetIteratorRunner implements Runnable, DataAccessListener {
 			// Query for patient
 			Map<Integer, Object> dicomCriteria = new HashMap<Integer, Object>();
 			Map<String, Object> aimCriteria = new HashMap<String, Object>();
+			dicomCriteria.putAll(selectedDataSearchResult.getOriginalCriteria().getDICOMCriteria());
 			dicomCriteria.put(Tag.PatientName, patient.getPatientName());
 			dicomCriteria.put(Tag.PatientID, patient.getPatientID());
 			query.setQuery(dicomCriteria, aimCriteria, QueryTarget.STUDY, selectedDataSearchResult, patient);
@@ -163,6 +152,7 @@ public class TargetIteratorRunner implements Runnable, DataAccessListener {
 			}
 			Map<Integer, Object> dicomCriteria = new HashMap<Integer, Object>();
 			Map<String, Object> aimCriteria = new HashMap<String, Object>();
+			dicomCriteria.putAll(selectedDataSearchResult.getOriginalCriteria().getDICOMCriteria());
 			dicomCriteria.put(Tag.PatientID, patientId);
 			dicomCriteria.put(Tag.PatientName, patientName);
 			dicomCriteria.put(Tag.StudyInstanceUID, study.getStudyInstanceUID());
@@ -206,6 +196,7 @@ public class TargetIteratorRunner implements Runnable, DataAccessListener {
 			}
 			Map<Integer, Object> dicomCriteria = new HashMap<Integer, Object>();
 			Map<String, Object> aimCriteria = new HashMap<String, Object>();
+			dicomCriteria.putAll(selectedDataSearchResult.getOriginalCriteria().getDICOMCriteria());
 			dicomCriteria.put(Tag.PatientID, patientId);
 			dicomCriteria.put(Tag.PatientName, patientName);
 			dicomCriteria.put(Tag.StudyInstanceUID, studyInstanceUID);
