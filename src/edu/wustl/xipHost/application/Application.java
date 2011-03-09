@@ -364,7 +364,7 @@ public class Application implements TargetIteratorListener, AVTRetrieve2Listener
 		String studyInstanceUID = entry.getStudyInstanceUID();
 		Map<Integer, Object> dicomCriteria = new HashMap<Integer, Object>();
 		Map<String, Object> aimCriteria = new HashMap<String, Object>();			
-		String queryName = "Grid";
+		String queryName = "AVT";
 		if(queryName.equalsIgnoreCase("AVT")){
 			dicomCriteria.put(Tag.StudyInstanceUID, studyInstanceUID);
 			query = new AVTQuery(dicomCriteria, aimCriteria, QueryTarget.PATIENT, null, null);
