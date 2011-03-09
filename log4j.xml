@@ -91,7 +91,7 @@
   </logger>
   
   
-  <logger name="edu.wustl.xipHost.avt2ext.TargetIterator">
+  <logger name="edu.wustl.xipHost.iterator.TargetIteratorRunner">
 	<appender-ref ref="TargetIterator_Appender"/>
   </logger>
   
