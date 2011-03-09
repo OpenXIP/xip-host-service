@@ -53,12 +53,12 @@ public class WorklistImpl implements Worklist {
 						logger.debug("Worklist recieved application: " + app);
 					}
 				}
-				logger.debug("Applications number: " + appMgr.getNumberOfApplications());
-				logger.debug("Contains: " + appMgr.hasApplication(app.getId()));
+				logger.debug("Number of applications: " + appMgr.getNumberOfApplications());				
 				boolean isAppRegistered = false;
 				if(app != null && appMgr.hasApplication(app.getId()) == true){
 					isAppRegistered = true;
 				}
+				logger.debug("Is application registered: " + appMgr.hasApplication(app.getId()));
 				if(isAppRegistered == false){
 					appMgr.addApplication(app);
 					InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("xipConfig.xml");
