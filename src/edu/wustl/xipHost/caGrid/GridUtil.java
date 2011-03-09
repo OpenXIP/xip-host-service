@@ -98,6 +98,13 @@ public class GridUtil {
 				query = new HashMap<String, String>();
 				query.put(HashmapToCQLQuery.TARGET_NAME_KEY, gov.nih.nci.ncia.domain.Series.class.getCanonicalName());
 			}
+			/*
+			gov.nih.nci.cagrid.cqlquery.CQLQuery query2 = new gov.nih.nci.cagrid.cqlquery.CQLQuery();
+			gov.nih.nci.cagrid.cqlquery.QueryModifier queryModifier = new gov.nih.nci.cagrid.cqlquery.QueryModifier();
+			queryModifier.setCountOnly(true);
+			query2.setQueryModifier(queryModifier);
+			*/
+			
 			cqlq = h2cql.makeCQLQuery(query);
 			/*System.err.println(ObjectSerializer.toString(cqlq, 
 					new QName("http://CQL.caBIG/1/gov.nih.nci.cagrid.CQLQuery", "CQLQuery")));*/
