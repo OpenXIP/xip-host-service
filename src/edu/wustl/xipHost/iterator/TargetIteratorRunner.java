@@ -288,8 +288,9 @@ public class TargetIteratorRunner implements Runnable, DataAccessListener {
 			
 			// ** PATIENT TARGET ** //
 			if(this.target == IterationTarget.PATIENT) {
-				// Update all elements below current patient
+				// Update all elements below current patient				
 				Patient patient = patientIt.next();
+				logger.debug("Updating patient - ID: " + patient.getPatientID() + " Name: " + patient.getPatientName());
 				updatePatient(patient);
 				for(Study study : patient.getStudies()) {
 					updateStudy(study);
@@ -356,6 +357,7 @@ public class TargetIteratorRunner implements Runnable, DataAccessListener {
 			} else if(this.target == IterationTarget.STUDY) {
 				// Update all elements below current study
 				Study study = studyIt.next();
+				logger.debug("Updating study - StudyInstanceUID: " + study.getStudyInstanceUID());
 				updateStudy(study);
 				for(Series series : study.getSeries()) {
 					updateSeries(series);
@@ -410,6 +412,7 @@ public class TargetIteratorRunner implements Runnable, DataAccessListener {
 			} else if(this.target == IterationTarget.SERIES) {
 				// Update Item list in series
 				Series series = seriesIt.next();
+				logger.debug("Updating series - SeriesInstanceUID: " + series.getSeriesInstanceUID());
 				updateSeries(series);
 				
 				// Build Criteria for Series
