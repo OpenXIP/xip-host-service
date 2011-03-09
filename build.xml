@@ -109,6 +109,7 @@
    <target name="clean" description="clean up">
       <!-- Delete the ${build} directory tree -->
       <delete dir="${build}" />
+   	  <delete file="xiphostservice.war"/>
    </target>
 	
 	<target name="unpack">
