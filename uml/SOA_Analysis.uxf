@@ -68,6 +68,7 @@ center:&lt;&lt;JAX-WS web services&gt;&gt;</panel_attributes><additional_attribu
 * getDataSources()</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1700</x><y>310</y><w>170</w><h>110</h></coordinates><panel_attributes>Application Service
 * register(Application)
 * verify(Application)
+* listApplications()
 </panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.custom.Database</type><coordinates><x>2210</x><y>130</y><w>150</w><h>40</h></coordinates><panel_attributes>HostDB IBM DB2</panel_attributes><additional_attributes></additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1950</x><y>100</y><w>280</w><h>70</h></coordinates><panel_attributes>lt=-
 &lt;&lt;JDBC&gt;&gt;</panel_attributes><additional_attributes>30;50;260;50</additional_attributes></element><element><type>com.umlet.element.base.Relation</type><coordinates><x>1900</x><y>440</y><w>290</w><h>340</h></coordinates><panel_attributes>lt=-
                 &lt;&lt;SOAP&gt;&gt;</panel_attributes><additional_attributes>30;320;150;320;150;30;270;30</additional_attributes></element><element><type>com.umlet.element.custom.SimpleComponent</type><coordinates><x>1250</x><y>720</y><w>330</w><h>80</h></coordinates><panel_attributes>StateManager
