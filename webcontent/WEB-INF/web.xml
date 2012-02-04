@@ -6,8 +6,7 @@
 	version="2.5">
 <display-name>XIP Host Service</display-name>
 	<description>
-		This is version 1.0 of XIP Host Service
-		based on WG-23 interface.
+		This is version 1.0 of XIP Host Service compatible with earlier version of DICOM Supplement 118 Application Hosting.
 	</description>
 	<listener>
 		<listener-class>

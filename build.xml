@@ -15,7 +15,7 @@
    <property name="lib.NBIA" location="${lib}/NBIA" />
    <property name="lib.NBIAext" location="${lib}/NBIAext" />	
    <property name="warfile" value="xiphostservice"/>
-   
+   <property name="webapps.dir" location="/Users/krych/DevTools/apache-tomcat-6.0.24/webapps"/>
 
    <path id="sourcepath">      
       <pathelement location="${src}" />     
@@ -73,7 +73,7 @@
 	</target>
 		
 	<target name="copy" description= "copies war file to local Tomcat webapps directory">
-		<copy todir="C:\DevelopmentTools\apache-tomcat-6.0.29\webapps" overwrite="true">
+		<copy todir="${webapps.dir}" overwrite="true">
 			<fileset dir=".">
 				<include name="*.war"/>
 			</fileset>
@@ -98,7 +98,7 @@
 			<copy file="./config/xipConfig.xml" todir="${build.classes}"/>
 			<copy file="./resources/NCIAModelMap.properties" todir="${build.classes}"/>
 			<copy file="./resources/NCIAModelHierarchy.properties" todir="${build.classes}"/>
-			<copy todir="C:\DevelopmentTools\apache-tomcat-6.0.29\webapps\xiphostservice\WEB-INF" overwrite="true">
+			<copy todir="${webapps.dir}/xiphostservice/WEB-INF" overwrite="true">
 				<fileset dir="${build}">
 					<include name="**"/>
 					<exclude name="lib/**"/>  
